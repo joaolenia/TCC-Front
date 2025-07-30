@@ -1,0 +1,213 @@
+   /* Importação da fonte do Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        /* Reset e Configurações Globais */
+        :root {
+            --cor-primaria: #0056b3; /* Azul escuro */
+            --cor-secundaria: #f8f9fa; /* Fundo cinza claro */
+            --cor-texto: #495057;
+            --cor-titulo: #343a40;
+            --cor-sucesso: #28a745;
+            --cor-info: #17a2b8;
+            --cor-aviso: #ffc107;
+            --cor-borda: #dee2e6;
+            --sombra-card: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--cor-secundaria);
+            color: var(--cor-texto);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Cabeçalho Superior */
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .top-header h1 {
+            font-size: 1.8rem;
+            color: var(--cor-titulo);
+            font-weight: 600;
+        }
+
+        /* Barra de Navegação e Ações */
+        .nav-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--cor-borda);
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .btn-voltar {
+            background: none;
+            border: 1px solid var(--cor-borda);
+            color: var(--cor-texto);
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-voltar:hover {
+            background-color: #e9ecef;
+            border-color: #adb5bd;
+        }
+        
+        .btn-nova-zona {
+            background-color: var(--cor-sucesso);
+            color: #fff;
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: background-color 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-nova-zona:hover {
+            background-color: #218838;
+        }
+
+        /* Grade de Zonas */
+        .zonas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .zona-card {
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: var(--sombra-card);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border-top: 5px solid;
+        }
+        
+        .zona-card:hover {
+             transform: translateY(-5px);
+             box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        /* Cores das bordas dos cards */
+        .zona-card.comercial { border-color: var(--cor-primaria); }
+        .zona-card.residencial { border-color: var(--cor-info); }
+        .zona-card.industrial { border-color: var(--cor-texto); }
+        .zona-card.mista { border-color: var(--cor-aviso); }
+
+        .card-header {
+            padding: 1.5rem 1.5rem 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-header h3 {
+            font-size: 1.3rem;
+            color: var(--cor-titulo);
+            font-weight: 600;
+        }
+        
+        .btn-editar {
+            background: none;
+            border: 1px solid var(--cor-borda);
+            color: var(--cor-primaria);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .btn-editar:hover {
+            background-color: var(--cor-primaria);
+            color: #fff;
+            border-color: var(--cor-primaria);
+        }
+
+        .card-body {
+            padding: 0 1.5rem 1.5rem 1.5rem;
+            flex-grow: 1;
+        }
+        
+        .card-body p {
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            color: #6c757d;
+        }
+        
+        .atividades-section h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--cor-titulo);
+            margin-bottom: 0.8rem;
+        }
+        
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .tag {
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            background-color: #e9ecef;
+            color: var(--cor-texto);
+        }
+
+        /* Ícones do Font Awesome */
+        @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css');
+
+        /* Responsividade */
+        @media (max-width: 992px) {
+            .zonas-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (max-width: 768px) {
+             .nav-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .btn-nova-zona {
+                justify-content: center;
+            }
+        }

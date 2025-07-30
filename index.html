@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Consultas Prévias</title>
+    <style>
+        /* Importação da fonte do Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        /* Reset e Configurações Globais */
+        :root {
+            --cor-primaria: #0056b3; /* Azul escuro */
+            --cor-secundaria: #f8f9fa; /* Fundo cinza claro */
+            --cor-texto: #495057;
+            --cor-titulo: #343a40;
+            --cor-sucesso: #28a745;
+            --cor-erro: #dc3545;
+            --cor-aviso: #ffc107;
+            --cor-borda: #dee2e6;
+            --sombra-card: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--cor-secundaria);
+            color: var(--cor-texto);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Cabeçalho */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--cor-borda);
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            color: var(--cor-titulo);
+            font-weight: 600;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-profile span {
+            font-weight: 500;
+        }
+
+        .user-profile img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--cor-primaria);
+        }
+
+        /* Painel de Estatísticas */
+        .stats-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background-color: #fff;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--sombra-card);
+            border-left: 5px solid;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .stat-card h3 {
+            font-size: 1rem;
+            color: #6c757d;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card p {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--cor-titulo);
+        }
+
+        .stat-card.total { border-color: var(--cor-primaria); }
+        .stat-card.aprovadas { border-color: var(--cor-sucesso); }
+        .stat-card.rejeitadas { border-color: var(--cor-erro); }
+        .stat-card.em-analise { border-color: var(--cor-aviso); }
+
+        /* Ferramentas e Filtros */
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .search-bar {
+            flex-grow: 1;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 2.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--cor-borda);
+            font-size: 1rem;
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #adb5bd;
+        }
+        
+        .btn-nova-consulta {
+            background-color: var(--cor-primaria);
+            color: #fff;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: background-color 0.2s ease;
+        }
+
+        .btn-nova-consulta:hover {
+            background-color: #004494;
+        }
+
+        /* Lista de Consultas */
+        .consultas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .consulta-card {
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: var(--sombra-card);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .consulta-card:hover {
+             transform: translateY(-5px);
+             box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        
+        .card-header .protocolo {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--cor-primaria);
+        }
+
+        .status-tag {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .status-tag.deferido { background-color: var(--cor-sucesso); }
+        .status-tag.indeferido { background-color: var(--cor-erro); }
+        .status-tag.analise { background-color: var(--cor-aviso); color: var(--cor-titulo); }
+
+        .card-body h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--cor-titulo);
+            margin-bottom: 0.5rem;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+            color: var(--cor-texto);
+        }
+        
+        .info-item i {
+            color: #888;
+        }
+        
+        .card-footer {
+            margin-top: auto; /* Empurra o rodapé para o final do card */
+            padding-top: 1rem;
+            border-top: 1px solid var(--cor-borda);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-footer .data {
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+
+        .btn-detalhes {
+            background: none;
+            border: 1px solid var(--cor-primaria);
+            color: var(--cor-primaria);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-detalhes:hover {
+            background-color: var(--cor-primaria);
+            color: #fff;
+        }
+
+        /* Ícones do Font Awesome */
+        @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css');
+    
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            .toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header class="header">
+            <h1>Painel de Consultas</h1>
+            <div class="user-profile">
+                <span>Servidor Municipal</span>
+                <img src="https://i.pravatar.cc/150?img=12" alt="Foto do servidor">
+            </div>
+        </header>
+
+        <section class="stats-panel">
+            <div class="stat-card total">
+                <h3>Total de Solicitações</h3>
+                <p>152</p>
+            </div>
+            <div class="stat-card aprovadas">
+                <h3>Consultas Deferidas</h3>
+                <p>118</p>
+            </div>
+            <div class="stat-card rejeitadas">
+                <h3>Consultas Indeferidas</h3>
+                <p>25</p>
+            </div>
+            <div class="stat-card em-analise">
+                <h3>Em Análise</h3>
+                <p>9</p>
+            </div>
+        </section>
+
+        <div class="toolbar">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Pesquisar por protocolo, solicitante ou endereço...">
+            </div>
+            <button class="btn-nova-consulta">
+                <i class="fas fa-plus"></i> Nova Análise Manual
+            </button>
+        </div>
+        
+        <main class="consultas-grid">
+            <div class="consulta-card">
+                <div class="card-header">
+                    <span class="protocolo">Protocolo: PR202500876</span>
+                    <span class="status-tag deferido">Deferido</span>
+                </div>
+                <div class="card-body">
+                    <h4>Empresa de Tecnologia e Inovação LTDA</h4>
+                    <div class="info-item">
+                        <i class="fas fa-user-tie"></i>
+                        <span>Solicitante: Carlos Ferreira de Souza</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Endereço: Rua da Inovação, 123, Centro</span>
+                    </div>
+                     <div class="info-item">
+                        <i class="fas fa-briefcase"></i>
+                        <span>CNAE Principal: 6201-5/01 - Desenvolvimento de programas</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="data">Recebido em: 29/07/2025</span>
+                    <button class="btn-detalhes">Ver Detalhes</button>
+                </div>
+            </div>
+
+            <div class="consulta-card">
+                <div class="card-header">
+                    <span class="protocolo">Protocolo: PR202500875</span>
+                    <span class="status-tag indeferido">Indeferido</span>
+                </div>
+                <div class="card-body">
+                    <h4>Restaurante Sabor da Cidade ME</h4>
+                     <div class="info-item">
+                        <i class="fas fa-user-tie"></i>
+                        <span>Solicitante: Ana Paula Oliveira</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Endereço: Av. Residencial das Flores, 500</span>
+                    </div>
+                     <div class="info-item">
+                        <i class="fas fa-briefcase"></i>
+                        <span>CNAE Principal: 5611-2/01 - Restaurantes e similares</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                     <span class="data">Recebido em: 28/07/2025</span>
+                    <button class="btn-detalhes">Ver Detalhes</button>
+                </div>
+            </div>
+
+            <div class="consulta-card">
+                <div class="card-header">
+                    <span class="protocolo">Protocolo: PR202500879</span>
+                    <span class="status-tag analise">Em Análise</span>
+                </div>
+                <div class="card-body">
+                    <h4>Comércio de Roupas Estilo Único</h4>
+                     <div class="info-item">
+                        <i class="fas fa-user-tie"></i>
+                        <span>Solicitante: Juliana Martins Costa</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Endereço: Rua Comercial, 789, Bairro Novo</span>
+                    </div>
+                     <div class="info-item">
+                        <i class="fas fa-briefcase"></i>
+                        <span>CNAE Principal: 4781-4/00 - Comércio varejista de artigos do vestuário</span>
+                    </div>
+                </div>
+                 <div class="card-footer">
+                     <span class="data">Recebido em: 30/07/2025</span>
+                    <button class="btn-detalhes">Ver Detalhes</button>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+</body>
+</html>
