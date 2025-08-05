@@ -7,7 +7,7 @@ function App() {
 
   return (
  <div>
-  <Home></Home>
+  {/* <Home></Home> */}
   {/* <DetalhesConsulta></DetalhesConsulta> */}
   {/* <GerenciamentoZoneamento></GerenciamentoZoneamento>  */}
  </div>
