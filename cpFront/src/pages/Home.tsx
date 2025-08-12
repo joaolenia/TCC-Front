@@ -1,4 +1,4 @@
-// src/pages/Home.tsx
+import { useNavigate } from 'react-router-dom';
 import './Home.css';
 
 type Consulta = {
@@ -19,33 +19,6 @@ const estatisticas = {
 };
 
 const consultas: Consulta[] = [
-  {
-    protocolo: 'PR202500876',
-    status: 'Deferido',
-    empresa: 'Empresa de Tecnologia e Inovação LTDA',
-    solicitante: 'Carlos Ferreira de Souza',
-    endereco: 'Rua da Inovação, 123, Centro',
-    cnae: '6201-5/01 - Desenvolvimento de programas',
-    data: '29/07/2025',
-  },
-  {
-    protocolo: 'PR202500875',
-    status: 'Indeferido',
-    empresa: 'Restaurante Sabor da Cidade ME',
-    solicitante: 'Ana Paula Oliveira',
-    endereco: 'Av. Residencial das Flores, 500',
-    cnae: '5611-2/01 - Restaurantes e similares',
-    data: '28/07/2025',
-  },
-  {
-    protocolo: 'PR202500879',
-    status: 'Em Análise',
-    empresa: 'Comércio de Roupas Estilo Único',
-    solicitante: 'Juliana Martins Costa',
-    endereco: 'Rua Comercial, 789, Bairro Novo',
-    cnae: '4781-4/00 - Comércio varejista de artigos do vestuário',
-    data: '30/07/2025',
-  },
     {
     protocolo: 'PR202500879',
     status: 'Em Análise',
@@ -55,7 +28,7 @@ const consultas: Consulta[] = [
     cnae: '4781-4/00 - Comércio varejista de artigos do vestuário',
     data: '30/07/2025',
   },
-    {
+      {
     protocolo: 'PR202500879',
     status: 'Em Análise',
     empresa: 'Comércio de Roupas Estilo Único',
@@ -64,7 +37,7 @@ const consultas: Consulta[] = [
     cnae: '4781-4/00 - Comércio varejista de artigos do vestuário',
     data: '30/07/2025',
   },
-    {
+      {
     protocolo: 'PR202500879',
     status: 'Em Análise',
     empresa: 'Comércio de Roupas Estilo Único',
@@ -76,6 +49,8 @@ const consultas: Consulta[] = [
 ];
 
 export default function Home() {
+  const navigate = useNavigate(); // <- Importa e cria navigate aqui
+
   return (
     <div className="container">
       <header className="header">
@@ -113,8 +88,11 @@ export default function Home() {
             placeholder="Pesquisar por protocolo, solicitante ou endereço..."
           />
         </div>
-        <button className="btn-nova-consulta">
-          <i className="fas fa-plus"></i> Verificar Zoneamento
+        <button
+          className="btn-nova-consulta"
+          onClick={() => navigate('/zoneamento')} // Corrigido aqui
+        >
+          <i className="fas fa-plus"></i> Gerenciar Zoneamento
         </button>
       </div>
 
@@ -123,7 +101,11 @@ export default function Home() {
           <div key={consulta.protocolo} className="consulta-card">
             <div className="card-header">
               <span className="protocolo">Protocolo: {consulta.protocolo}</span>
-              <span className={`status-tag ${consulta.status.toLowerCase().replace(' ', '-')}`}>
+              <span
+                className={`status-tag ${consulta.status
+                  .toLowerCase()
+                  .replace(' ', '-')}`}
+              >
                 {consulta.status}
               </span>
             </div>

@@ -5,6 +5,7 @@ import DetalhesConsulta from './pages/Details';
 import GerenciamentoZoneamento from './pages/zoneamento/Zoneamento';
 import NovaZona from './components/NovaZona';
 import Login from './pages/Login';
+import EditarZona from './components/EditarZona';
 
 type PrivateRouteProps = {
   children: React.ReactNode;
@@ -59,8 +60,21 @@ function App() {
       />
       {/* Rota curinga */}
       <Route path="*" element={<Navigate to="/" />} />
+
+
+     <Route 
+        path="/zoneamento/editar/:id" 
+        element={
+          <PrivateRoute>
+            <EditarZona />
+          </PrivateRoute>
+        } 
+      />
+
+      <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
+  
 }
 
 export default App;

@@ -74,7 +74,8 @@ export default function GerenciamentoZoneamento() {
           <div key={zona.id} className={`zona-card ${getTipoClass(zona)}`}>
             <div className="card-header">
               <h3>{zona.nome}</h3>
-              <button className="btn-editar">
+              <button className="btn-editar"
+               onClick={() => navigate(`/zoneamento/editar/${zona.id}`)}>
                 <i className="fas fa-pencil-alt"></i> Editar
               </button>
             </div>

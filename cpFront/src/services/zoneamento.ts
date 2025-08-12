@@ -26,7 +26,21 @@ export async function fetchZoneamentos(): Promise<Zoneamento[]> {
   return response.data;
 }
 
+export async function fetchZoneamentoById(id: number): Promise<Zoneamento> {
+  const response = await api.get(`/v1/integracao/zoneamentos/${id}`);
+  return response.data;
+}
+
 export async function createZoneamento(data: ZoneamentoInput): Promise<Zoneamento> {
   const response = await api.post('/v1/integracao/zoneamentos', data);
   return response.data;
+}
+
+export async function updateZoneamento(id: number, data: Partial<ZoneamentoInput>): Promise<Zoneamento> {
+  const response = await api.patch(`/v1/integracao/zoneamentos/${id}`, data);
+  return response.data;
+}
+
+export async function deleteZoneamento(id: number): Promise<void> {
+  await api.delete(`/v1/integracao/zoneamentos/${id}`);
 }
