@@ -1,7 +1,7 @@
-// src/pages/GerenciamentoZoneamento.tsx
 import './Zoneamento.css';
 import { fetchZoneamentos } from '../../services/zoneamento';
 import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 type Zona = {
   id: number;
@@ -14,30 +14,38 @@ type Zona = {
   }[];
 };
 
-
 export default function GerenciamentoZoneamento() {
   const [zonas, setZonas] = useState<Zona[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const loadZonas = () => {
+    setLoading(true);
     fetchZoneamentos()
       .then((data) => setZonas(data))
       .catch((err) => setError(err.message || 'Erro ao carregar zonas'))
       .finally(() => setLoading(false));
-  }, []);
+  };
+
+  // Recarrega toda vez que entrar na rota /zoneamento
+  useEffect(() => {
+    if (location.pathname === '/zoneamento') {
+      loadZonas();
+    }
+  }, [location.pathname]);
 
   if (loading) return <div className="container">Carregando zonas...</div>;
   if (error) return <div className="container">Erro: {error}</div>;
 
-  // Função auxiliar para definir a classe CSS da zona baseado em CNAEs ou nome
   const getTipoClass = (zona: Zona): string => {
-    // Como você não tem um campo 'tipo' na API, podemos definir regras simples:
     if (zona.nome.toLowerCase().includes('comercial')) return 'comercial';
     if (zona.nome.toLowerCase().includes('residencial')) return 'residencial';
     if (zona.nome.toLowerCase().includes('industrial')) return 'industrial';
     if (zona.nome.toLowerCase().includes('mista')) return 'mista';
-    return 'comercial'; // padrão
+    return 'comercial';
   };
 
   return (
@@ -50,10 +58,13 @@ export default function GerenciamentoZoneamento() {
       </header>
 
       <nav className="nav-actions">
-        <a href="#" className="btn-voltar">
+        <a href="#" className="btn-voltar" onClick={() => navigate('/')}>
           <i className="fas fa-arrow-left"></i> Voltar ao Painel
         </a>
-        <button className="btn-nova-zona">
+        <button
+          className="btn-nova-zona"
+          onClick={() => navigate('/zoneamento/nova')}
+        >
           <i className="fas fa-plus"></i> Cadastrar Nova Zona
         </button>
       </nav>

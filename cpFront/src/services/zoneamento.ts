@@ -1,21 +1,32 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000',
+});
 
-export interface Cnae {
-  id: number;
-  codigo: string;
+export interface ZoneamentoInput {
+  nome: string;
   descricao: string;
+  cnaesPermitidosIds: number[];
 }
 
 export interface Zoneamento {
   id: number;
   nome: string;
   descricao: string;
-  cnaesPermitidos: Cnae[];
+  cnaesPermitidos: {
+    id: number;
+    codigo: string;
+    descricao: string;
+  }[];
 }
 
 export async function fetchZoneamentos(): Promise<Zoneamento[]> {
-  const response = await axios.get<Zoneamento[]>(`${API_BASE_URL}/v1/integracao/zoneamentos`);
+  const response = await api.get('/v1/integracao/zoneamentos');
+  return response.data;
+}
+
+export async function createZoneamento(data: ZoneamentoInput): Promise<Zoneamento> {
+  const response = await api.post('/v1/integracao/zoneamentos', data);
   return response.data;
 }

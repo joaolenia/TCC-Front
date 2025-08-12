@@ -1,26 +1,24 @@
-import React from 'react'; // 1. Adicione esta linha
+import React from 'react'; // 1. Linha adicionada
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Home from './pages/Home';
 import DetalhesConsulta from './pages/Details';
 import GerenciamentoZoneamento from './pages/zoneamento/Zoneamento';
+import NovaZona from './components/NovaZona';
 import Login from './pages/Login';
 
-// 2. Tipo para as props do PrivateRoute
 type PrivateRouteProps = {
   children: React.ReactNode;
 };
 
-// Componente para proteger rotas
-function PrivateRoute({ children }: PrivateRouteProps) { // 3. Use o novo tipo
+function PrivateRoute({ children }: PrivateRouteProps) {
   const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
   const location = useLocation();
 
   if (!isAuthenticated) {
-    // Redireciona para a página de login, salvando a rota atual
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  return <>{children}</>; // É uma boa prática envolver em um Fragment
+  return <>{children}</>;
 }
 
 function App() {
@@ -51,7 +49,15 @@ function App() {
           </PrivateRoute>
         }
       />
-      {/* Rota curinga para redirecionar para a página principal */}
+      <Route
+        path="/zoneamento/nova"
+        element={
+          <PrivateRoute>
+            <NovaZona />
+          </PrivateRoute>
+        }
+      />
+      {/* Rota curinga */}
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );

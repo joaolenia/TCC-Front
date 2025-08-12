@@ -1,0 +1,283 @@
+/* src/pages/zoneamento/NovaZona.css */
+
+/* Definição de Variáveis Globais de Estilo */
+:root {
+    --cor-card-fundo: #fff;
+    --cor-fundo-hover: #e9ecef;
+    --cor-fundo-desabilitado: #a5d6a7;
+    --cor-fundo-erro: #fce8e6;
+    --cor-fundo-scrollbar: #f1f1f1;
+    --cor-thumb-scrollbar: #ccc;
+    --cor-thumb-scrollbar-hover: #aaa;
+    --cor-icone-placeholder: #adb5bd;
+    --cor-sucesso-hover: #218838;
+    --cor-branco: #fff;
+
+    /* Sombras */
+    --sombra-card-moderna: 0 8px 16px rgba(0, 0, 0, 0.05);
+    --sombra-foco-card: 0 8px 24px rgba(0, 86, 179, 0.1);
+    --sombra-foco-input: 0 0 0 3px rgba(0, 86, 179, 0.15);
+    --sombra-botao-sucesso: 0 4px 10px rgba(40, 167, 69, 0.2);
+    --sombra-botao-sucesso-hover: 0 6px 14px rgba(40, 167, 69, 0.3);
+}
+
+/* --- Estrutura Principal e Animação --- */
+.form-container {
+    max-width: 900px;
+    margin: 2rem auto;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.zona-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- Estilo dos Cards do Formulário --- */
+.form-card {
+    background-color: var(--cor-card-fundo);
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: var(--sombra-card-moderna);
+    border: 1px solid var(--cor-borda);
+    transition: box-shadow 0.3s ease;
+}
+
+.form-card:focus-within {
+    box-shadow: var(--sombra-foco-card);
+}
+
+.form-card h3 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--cor-titulo);
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--cor-borda);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* --- Campos de Input e Textarea --- */
+.input-group {
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 0.6rem;
+    font-weight: 500;
+    color: var(--cor-texto);
+    font-size: 0.9rem;
+}
+
+.input-group input,
+.input-group textarea {
+    width: 100%;
+    padding: 0.9rem 1rem;
+    border: 1px solid var(--cor-borda);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-group input:focus,
+.input-group textarea:focus {
+    outline: none;
+    border-color: var(--cor-primaria);
+    box-shadow: var(--sombra-foco-input);
+}
+
+.input-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* --- Busca e Lista de CNAEs --- */
+.cnae-search-bar {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.cnae-search-bar input {
+    width: 100%;
+    padding: 0.9rem 1rem 0.9rem 2.8rem;
+    border: 1px solid var(--cor-borda);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.cnae-search-bar input:focus {
+    outline: none;
+    border-color: var(--cor-primaria);
+    box-shadow: var(--sombra-foco-input);
+}
+
+.cnae-search-bar i {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--cor-icone-placeholder);
+    font-size: 1rem;
+}
+
+.cnae-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.2rem;
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 0.5rem;
+}
+
+.cnae-list::-webkit-scrollbar {
+    width: 8px;
+}
+.cnae-list::-webkit-scrollbar-track {
+    background: var(--cor-fundo-scrollbar);
+    border-radius: 10px;
+}
+.cnae-list::-webkit-scrollbar-thumb {
+    background: var(--cor-thumb-scrollbar);
+    border-radius: 10px;
+}
+.cnae-list::-webkit-scrollbar-thumb:hover {
+    background: var(--cor-thumb-scrollbar-hover);
+}
+
+.cnae-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    background-color: var(--cor-secundaria);
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.cnae-item:hover {
+    background-color: var(--cor-fundo-hover);
+}
+
+.cnae-item input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--cor-borda);
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.cnae-item input[type="checkbox"]:checked {
+    background-color: var(--cor-primaria);
+    border-color: var(--cor-primaria);
+}
+
+.cnae-item input[type="checkbox"]:checked::after {
+    content: '✔';
+    color: var(--cor-branco);
+    font-size: 14px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.cnae-item label {
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    color: var(--cor-texto);
+}
+
+/* --- Botões de Ação --- */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.btn-salvar,
+.btn-cancelar {
+    padding: 0.9rem 2.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-salvar {
+    background-color: var(--cor-sucesso);
+    color: var(--cor-branco);
+    box-shadow: var(--sombra-botao-sucesso);
+}
+
+.btn-salvar:hover {
+    background-color: var(--cor-sucesso-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--sombra-botao-sucesso-hover);
+}
+
+.btn-salvar:disabled {
+    background-color: var(--cor-fundo-desabilitado);
+    cursor: not-allowed;
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+.btn-cancelar {
+    background-color: var(--cor-card-fundo);
+    border: 1px solid var(--cor-borda);
+    color: var(--cor-texto);
+}
+
+.btn-cancelar:hover {
+    background-color: var(--cor-secundaria);
+    border-color: var(--cor-icone-placeholder);
+    transform: translateY(-2px);
+}
+
+.btn-salvar i,
+.btn-voltar i {
+    margin-right: 0.5rem;
+}
+
+/* --- Mensagens de Erro --- */
+.error-message {
+  color: var(--cor-erro);
+  background-color: var(--cor-fundo-erro);
+  border: 1px solid var(--cor-erro);
+  border-left: 5px solid var(--cor-erro);
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  text-align: center;
+  margin-top: 1rem;
+  font-weight: 500;
+}
