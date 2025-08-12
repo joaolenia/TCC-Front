@@ -78,6 +78,10 @@ export default function GerenciamentoZoneamento() {
                onClick={() => navigate(`/zoneamento/editar/${zona.id}`)}>
                 <i className="fas fa-pencil-alt"></i> Editar
               </button>
+               <button className="btn-editar"
+               onClick={() => navigate(`/zoneamento/${zona.id}/enderecos`)}>
+                <i className="fas fa-pencil-alt"></i> Endereços
+              </button>
             </div>
             <div className="card-body">
               <p>{zona.descricao}</p>

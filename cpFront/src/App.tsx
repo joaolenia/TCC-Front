@@ -6,6 +6,7 @@ import GerenciamentoZoneamento from './pages/zoneamento/Zoneamento';
 import NovaZona from './components/NovaZona';
 import Login from './pages/Login';
 import EditarZona from './components/EditarZona';
+import GerenciamentoEnderecos from './pages/GerenciamentoEnderecos';
 
 type PrivateRouteProps = {
   children: React.ReactNode;
@@ -67,6 +68,17 @@ function App() {
         element={
           <PrivateRoute>
             <EditarZona />
+          </PrivateRoute>
+        } 
+      />
+
+      <Route path="*" element={<Navigate to="/" />} />
+
+            <Route 
+        path="/zoneamento/:id/enderecos" 
+        element={
+          <PrivateRoute>
+            <GerenciamentoEnderecos />
           </PrivateRoute>
         } 
       />
