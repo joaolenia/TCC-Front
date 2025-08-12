@@ -2,7 +2,7 @@ import React from 'react'; // 1. Adicione esta linha
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Home from './pages/Home';
 import DetalhesConsulta from './pages/Details';
-import GerenciamentoZoneamento from './pages/Zoneamento';
+import GerenciamentoZoneamento from './pages/zoneamento/Zoneamento';
 import Login from './pages/Login';
 
 // 2. Tipo para as props do PrivateRoute
