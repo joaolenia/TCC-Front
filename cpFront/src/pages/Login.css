@@ -78,3 +78,38 @@
   margin-bottom: 1rem;
   font-size: 0.9rem;
 }
+
+/* Adicione estas classes ao seu arquivo Home.css existente */
+
+.stat-card {
+    cursor: pointer; /* Muda o cursor para indicar que é clicável */
+    transition: all 0.3s ease; /* Transição suave para todas as propriedades */
+}
+
+/* Estilo para o card de estatística ativo (selecionado) */
+.stat-card.active {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 86, 179, 0.2); /* Sombra mais forte na cor primária */
+    border-width: 5px; /* Deixa a borda mais grossa */
+}
+
+/* Estilo para o destaque da situação dentro do card */
+.info-item.situacao-destaque {
+    background-color: #f0f4f8; /* Fundo levemente azulado */
+    padding: 0.5rem;
+    border-radius: 6px;
+    margin-top: 0.5rem;
+    border-left: 3px solid var(--cor-primaria); /* Destaque na cor primária */
+}
+
+.info-item.situacao-destaque span {
+    font-weight: 600; /* Deixa o texto da situação em negrito */
+    color: var(--cor-titulo);
+}
+
+.error-message {
+    text-align: center;
+    color: var(--cor-erro);
+    font-size: 1.1rem;
+    padding: 2rem;
+}

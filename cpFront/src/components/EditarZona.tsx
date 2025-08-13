@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
@@ -7,7 +6,7 @@ import {
   deleteZoneamento,
 } from '../services/zoneamento';
 import { fetchCnaes } from '../services/cnaes';
-import './NovaZona.css'; 
+import './NovaZona.css';
 
 type Cnae = {
   id: number;
@@ -15,17 +14,66 @@ type Cnae = {
   descricao: string;
 };
 
+const converterGeoJsonParaTexto = (area: any): string => {
+  if (!area || !area.features || !area.features[0]?.geometry?.coordinates) {
+    return '';
+  }
+  try {
+    const coordenadas = area.features[0].geometry.coordinates[0];
+    return coordenadas.map((ponto: number[]) => `[${ponto.join(', ')}],`).join('\n');
+  } catch {
+    return '';
+  }
+};
+
+const converterTextoParaGeoJson = (texto: string): object | null => {
+    if (!texto.trim()) {
+      return null;
+    }
+    const linhas = texto.trim().split('\n').filter(linha => linha.trim() !== '');
+    const coordenadas = linhas.map(linha => {
+      const limpo = linha.replace(/[\[\]]/g, '');
+      const partes = limpo.split(',').map(num => parseFloat(num.trim()));
+      return partes.filter(num => !isNaN(num));
+    }).filter(coord => coord.length >= 2);
+  
+    if (coordenadas.length < 3) {
+      throw new Error("São necessárias pelo menos 3 coordenadas para formar um polígono válido.");
+    }
+  
+    const primeiroPonto = coordenadas[0];
+    const ultimoPonto = coordenadas[coordenadas.length - 1];
+    if (primeiroPonto[0] !== ultimoPonto[0] || primeiroPonto[1] !== ultimoPonto[1]) {
+      coordenadas.push(primeiroPonto);
+    }
+  
+    return {
+      type: 'FeatureCollection',
+      features: [
+        {
+          type: 'Feature',
+          geometry: {
+            type: 'Polygon',
+            coordinates: [coordenadas],
+          },
+          properties: {},
+        },
+      ],
+    };
+  };
+
 export default function EditarZona() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
   const [nome, setNome] = useState('');
   const [descricao, setDescricao] = useState('');
+  const [coordenadasTexto, setCoordenadasTexto] = useState('');
   const [cnaesDisponiveis, setCnaesDisponiveis] = useState<Cnae[]>([]);
   const [cnaesSelecionados, setCnaesSelecionados] = useState<number[]>([]);
   const [termoBusca, setTermoBusca] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const zoneId = Number(id);
@@ -35,7 +83,6 @@ export default function EditarZona() {
       return;
     }
 
-    // Busca os dados da Zona e a lista de todos os CNAEs em paralelo
     Promise.all([
       fetchZoneamentoById(zoneId),
       fetchCnaes()
@@ -44,12 +91,12 @@ export default function EditarZona() {
       setDescricao(zonaData.descricao);
       setCnaesSelecionados(zonaData.cnaesPermitidos.map(cnae => cnae.id));
       setCnaesDisponiveis(cnaesData);
+      setCoordenadasTexto(converterGeoJsonParaTexto(zonaData.area));
     }).catch(() => {
       setError('Falha ao carregar os dados da zona ou a lista de CNAEs.');
     }).finally(() => {
       setLoading(false);
     });
-
   }, [id]);
 
   const handleCnaeChange = (cnaeId: number) => {
@@ -70,22 +117,25 @@ export default function EditarZona() {
 
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!nome || !descricao || cnaesSelecionados.length === 0) {
-      setError('Todos os campos são obrigatórios.');
+    if (!nome || cnaesSelecionados.length === 0) {
+      setError('O nome da zona e a seleção de ao menos um CNAE são obrigatórios.');
       return;
     }
     setLoading(true);
     setError(null);
     try {
       const zoneId = Number(id);
+      const area = converterTextoParaGeoJson(coordenadasTexto);
+      
       await updateZoneamento(zoneId, {
         nome,
         descricao,
         cnaesPermitidosIds: cnaesSelecionados,
+        area: area,
       });
       navigate('/zoneamento');
-    } catch (err) {
-      setError('Erro ao atualizar a zona. Tente novamente.');
+    } catch (err: any) {
+      setError(err.message || 'Erro ao atualizar a zona. Verifique os dados e tente novamente.');
     } finally {
       setLoading(false);
     }
@@ -124,7 +174,6 @@ export default function EditarZona() {
       </nav>
       <main className="form-container">
         <form onSubmit={handleUpdate} className="zona-form">
-          {/* ... campos do formulário (iguais ao de NovaZona) ... */}
           <div className="form-card">
             <h3><i className="fas fa-map-marked-alt"></i> Detalhes da Zona</h3>
             <div className="input-group">
@@ -133,7 +182,18 @@ export default function EditarZona() {
             </div>
             <div className="input-group">
               <label htmlFor="descricao">Descrição</label>
-              <textarea id="descricao" value={descricao} onChange={(e) => setDescricao(e.target.value)} rows={4} required />
+              <textarea id="descricao" value={descricao} onChange={(e) => setDescricao(e.target.value)} rows={4} />
+            </div>
+            <div className="input-group">
+                <label htmlFor="coordenadas">Coordenadas do Polígono</label>
+                <textarea
+                    id="coordenadas"
+                    value={coordenadasTexto}
+                    onChange={(e) => setCoordenadasTexto(e.target.value)}
+                    placeholder="Cole as coordenadas aqui, uma por linha. Ex: [-51.35, -26.01, 0],"
+                    rows={10}
+                    style={{ fontFamily: 'monospace', lineHeight: '1.5' }}
+                />
             </div>
           </div>
 
@@ -157,13 +217,13 @@ export default function EditarZona() {
 
           <div className="form-actions-edit">
             <button type="button" onClick={handleDelete} className="btn-excluir" disabled={loading}>
-                <i className="fas fa-trash-alt"></i> Excluir Zona
+              <i className="fas fa-trash-alt"></i> Excluir Zona
             </button>
             <div>
-                <button type="button" onClick={() => navigate('/zoneamento')} className="btn-cancelar">Cancelar</button>
-                <button type="submit" className="btn-salvar" disabled={loading}>
-                    {loading ? 'Salvando...' : <><i className="fas fa-save"></i> Salvar Alterações</>}
-                </button>
+              <button type="button" onClick={() => navigate('/zoneamento')} className="btn-cancelar">Cancelar</button>
+              <button type="submit" className="btn-salvar" disabled={loading}>
+                {loading ? 'Salvando...' : <><i className="fas fa-save"></i> Salvar Alterações</>}
+              </button>
             </div>
           </div>
         </form>

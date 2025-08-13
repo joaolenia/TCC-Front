@@ -1,4 +1,3 @@
-// src/pages/zoneamento/NovaZona.tsx
 import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createZoneamento } from '../services/zoneamento';
@@ -11,9 +10,48 @@ type Cnae = {
   descricao: string;
 };
 
+const converterTextoParaGeoJson = (texto: string): object | null => {
+  if (!texto.trim()) {
+    return null;
+  }
+
+  const linhas = texto.trim().split('\n').filter(linha => linha.trim() !== '');
+
+  const coordenadas = linhas.map(linha => {
+    const limpo = linha.replace(/[\[\]]/g, '');
+    const partes = limpo.split(',').map(num => parseFloat(num.trim()));
+    return partes.filter(num => !isNaN(num));
+  }).filter(coord => coord.length >= 2);
+
+  if (coordenadas.length < 3) {
+    throw new Error("São necessárias pelo menos 3 coordenadas para formar um polígono válido.");
+  }
+
+  const primeiroPonto = coordenadas[0];
+  const ultimoPonto = coordenadas[coordenadas.length - 1];
+  if (primeiroPonto[0] !== ultimoPonto[0] || primeiroPonto[1] !== ultimoPonto[1]) {
+    coordenadas.push(primeiroPonto);
+  }
+
+  return {
+    type: 'FeatureCollection',
+    features: [
+      {
+        type: 'Feature',
+        geometry: {
+          type: 'Polygon',
+          coordinates: [coordenadas],
+        },
+        properties: {},
+      },
+    ],
+  };
+};
+
 export default function NovaZona() {
   const [nome, setNome] = useState('');
   const [descricao, setDescricao] = useState('');
+  const [coordenadasTexto, setCoordenadasTexto] = useState('');
   const [cnaesDisponiveis, setCnaesDisponiveis] = useState<Cnae[]>([]);
   const [cnaesSelecionados, setCnaesSelecionados] = useState<number[]>([]);
   const [termoBusca, setTermoBusca] = useState('');
@@ -49,22 +87,27 @@ export default function NovaZona() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!nome || !descricao || cnaesSelecionados.length === 0) {
-      setError('Todos os campos, incluindo a seleção de ao menos um CNAE, são obrigatórios.');
+    if (!nome || cnaesSelecionados.length === 0) {
+      setError('O nome da zona e a seleção de ao menos um CNAE são obrigatórios.');
       return;
     }
     setLoading(true);
     setError(null);
+
     try {
+      const area = converterTextoParaGeoJson(coordenadasTexto);
+      
       const novaZona = {
         nome,
         descricao,
         cnaesPermitidosIds: cnaesSelecionados,
+        area: area, 
       };
+
       await createZoneamento(novaZona);
       navigate('/zoneamento');
-    } catch (err) {
-      setError('Erro ao salvar a nova zona. Tente novamente.');
+    } catch (err: any) {
+      setError(err.message || 'Erro ao salvar a nova zona. Verifique os dados e tente novamente.');
     } finally {
       setLoading(false);
     }
@@ -106,7 +149,17 @@ export default function NovaZona() {
                 onChange={(e) => setDescricao(e.target.value)}
                 placeholder="Ex: Área para atividades industriais relacionadas ao agronegócio"
                 rows={4}
-                required
+              />
+            </div>
+            <div className="input-group">
+              <label htmlFor="coordenadas">Coordenadas do Polígono</label>
+              <textarea
+                id="coordenadas"
+                value={coordenadasTexto}
+                onChange={(e) => setCoordenadasTexto(e.target.value)}
+                placeholder="Cole as coordenadas aqui, uma por linha. Ex: [-51.35, -26.01, 0],"
+                rows={10}
+                style={{ fontFamily: 'monospace', lineHeight: '1.5' }}
               />
             </div>
           </div>
