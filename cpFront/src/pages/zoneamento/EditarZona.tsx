@@ -4,8 +4,8 @@ import {
   fetchZoneamentoById,
   updateZoneamento,
   deleteZoneamento,
-} from '../services/zoneamento';
-import { fetchCnaes } from '../services/cnaes';
+} from '../../services/zoneamento';
+import { fetchCnaes } from '../../services/cnaes';
 import './NovaZona.css';
 
 type Cnae = {

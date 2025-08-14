@@ -1,4 +1,4 @@
-@import '../../components/NovaZona.css';
+@import '../zoneamento/NovaZona.css';
 
 .cnae-form {
     display: flex;

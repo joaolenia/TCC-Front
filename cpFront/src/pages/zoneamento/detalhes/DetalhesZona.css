@@ -1,0 +1,35 @@
+/* Importa estilos base para consistência */
+
+.details-zona-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+.zona-descricao {
+  font-size: 1rem;
+  color: var(--cor-texto);
+  margin-bottom: 2rem;
+}
+
+.map-card {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: var(--sombra-card);
+}
+
+.map-card h3 {
+  font-size: 1.3rem;
+  color: var(--cor-titulo);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+.map-container {
+  height: 450px;
+  width: 100%;
+  border-radius: 8px;
+  z-index: 1; /* Garante que o mapa fique visível */
+}

@@ -3,13 +3,14 @@ import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Home from './pages/home/Home';
 import DetalhesConsulta from './pages/details/Details';
 import GerenciamentoZoneamento from './pages/zoneamento/Zoneamento';
-import NovaZona from './components/NovaZona';
+import NovaZona from './pages/zoneamento/NovaZona';
 import Login from './pages/login/Login';
-import EditarZona from './components/EditarZona';
+import EditarZona from './pages/zoneamento/EditarZona';
 // Imports para as novas páginas de CNAE
 import GerenciarCnaes from './pages/cnaes/GerenciarCnaes';
 import NovoCnae from './pages/cnaes/NovoCnae';
 import EditarCnae from './pages/cnaes/EditarCnae';
+import DetalhesZona from './pages/zoneamento/detalhes/DetalhesZona';
 
 type PrivateRouteProps = {
   children: React.ReactNode;
@@ -95,6 +96,15 @@ function App() {
             <EditarCnae />
           </PrivateRoute>
         }
+      />
+
+       <Route 
+        path="/zoneamento/detalhes/:id" 
+        element={
+          <PrivateRoute>
+            <DetalhesZona />
+          </PrivateRoute>
+        } 
       />
 
       {/* Rota curinga */}

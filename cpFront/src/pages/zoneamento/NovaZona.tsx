@@ -1,8 +1,10 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, type ChangeEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createZoneamento } from '../services/zoneamento';
-import { fetchCnaes } from '../services/cnaes';
+import { createZoneamento } from '../../services/zoneamento';
+import { fetchCnaes } from '../../services/cnaes';
 import './NovaZona.css';
+import JSZip from 'jszip';
+import { kml } from '@tmcw/togeojson';
 
 type Cnae = {
   id: number;
@@ -10,54 +12,18 @@ type Cnae = {
   descricao: string;
 };
 
-const converterTextoParaGeoJson = (texto: string): object | null => {
-  if (!texto.trim()) {
-    return null;
-  }
-
-  const linhas = texto.trim().split('\n').filter(linha => linha.trim() !== '');
-
-  const coordenadas = linhas.map(linha => {
-    const limpo = linha.replace(/[\[\]]/g, '');
-    const partes = limpo.split(',').map(num => parseFloat(num.trim()));
-    return partes.filter(num => !isNaN(num));
-  }).filter(coord => coord.length >= 2);
-
-  if (coordenadas.length < 3) {
-    throw new Error("São necessárias pelo menos 3 coordenadas para formar um polígono válido.");
-  }
-
-  const primeiroPonto = coordenadas[0];
-  const ultimoPonto = coordenadas[coordenadas.length - 1];
-  if (primeiroPonto[0] !== ultimoPonto[0] || primeiroPonto[1] !== ultimoPonto[1]) {
-    coordenadas.push(primeiroPonto);
-  }
-
-  return {
-    type: 'FeatureCollection',
-    features: [
-      {
-        type: 'Feature',
-        geometry: {
-          type: 'Polygon',
-          coordinates: [coordenadas],
-        },
-        properties: {},
-      },
-    ],
-  };
-};
-
 export default function NovaZona() {
   const [nome, setNome] = useState('');
   const [descricao, setDescricao] = useState('');
-  const [coordenadasTexto, setCoordenadasTexto] = useState('');
   const [cnaesDisponiveis, setCnaesDisponiveis] = useState<Cnae[]>([]);
   const [cnaesSelecionados, setCnaesSelecionados] = useState<number[]>([]);
   const [termoBusca, setTermoBusca] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const [geoJsonArea, setGeoJsonArea] = useState<object | null>(null);
+  const [fileName, setFileName] = useState<string>('');
 
   useEffect(() => {
     setLoading(true);
@@ -85,23 +51,62 @@ export default function NovaZona() {
     );
   }, [termoBusca, cnaesDisponiveis]);
 
+  const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) {
+      setGeoJsonArea(null);
+      setFileName('');
+      return;
+    }
+
+    setFileName(file.name);
+    setLoading(true);
+    setError(null);
+
+    try {
+      const zip = await JSZip.loadAsync(file);
+      const kmlFile = Object.values(zip.files).find(f => f.name.toLowerCase().endsWith('.kml'));
+
+      if (!kmlFile) {
+        throw new Error('Nenhum arquivo .kml foi encontrado dentro do .kmz.');
+      }
+
+      const kmlText = await kmlFile.async('text');
+      const parser = new DOMParser();
+      const kmlDom = parser.parseFromString(kmlText, 'text/xml');
+      
+      const geoJson = kml(kmlDom);
+
+      if (!geoJson.features || geoJson.features.length === 0) {
+        throw new Error('O arquivo KML não contém dados geográficos (features) válidos para conversão.');
+      }
+
+      setGeoJsonArea(geoJson);
+
+    } catch (err: any) {
+      setError(`Erro ao processar o arquivo: ${err.message}`);
+      setGeoJsonArea(null);
+      setFileName('');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!nome || cnaesSelecionados.length === 0) {
-      setError('O nome da zona e a seleção de ao menos um CNAE são obrigatórios.');
+    if (!nome || cnaesSelecionados.length === 0 || !geoJsonArea) {
+      setError('O nome da zona, a seleção de ao menos um CNAE e um arquivo KMZ válido são obrigatórios.');
       return;
     }
     setLoading(true);
     setError(null);
 
     try {
-      const area = converterTextoParaGeoJson(coordenadasTexto);
-      
       const novaZona = {
         nome,
         descricao,
         cnaesPermitidosIds: cnaesSelecionados,
-        area: area, 
+        area: geoJsonArea, 
       };
 
       await createZoneamento(novaZona);
@@ -152,15 +157,21 @@ export default function NovaZona() {
               />
             </div>
             <div className="input-group">
-              <label htmlFor="coordenadas">Coordenadas do Polígono</label>
-              <textarea
-                id="coordenadas"
-                value={coordenadasTexto}
-                onChange={(e) => setCoordenadasTexto(e.target.value)}
-                placeholder="Cole as coordenadas aqui, uma por linha. Ex: [-51.35, -26.01, 0],"
-                rows={10}
-                style={{ fontFamily: 'monospace', lineHeight: '1.5' }}
-              />
+              <label htmlFor="kmz-upload">Arquivo de Área Geográfica (KMZ)</label>
+              <div className="file-upload-wrapper">
+                <input
+                  type="file"
+                  id="kmz-upload"
+                  accept=".kmz"
+                  onChange={handleFileChange}
+                  required
+                />
+                <label htmlFor="kmz-upload" className="file-upload-label">
+                  <i className="fas fa-upload"></i>
+                  {fileName ? `Arquivo: ${fileName}` : 'Escolher arquivo KMZ'}
+                </label>
+              </div>
+              {geoJsonArea && <p className="success-message">Arquivo processado com sucesso!</p>}
             </div>
           </div>
 
@@ -176,7 +187,7 @@ export default function NovaZona() {
               />
             </div>
             <div className="cnae-list">
-              {loading && <p>Carregando CNAEs...</p>}
+              {loading && !cnaesDisponiveis.length && <p>Carregando CNAEs...</p>}
               {!loading && cnaesFiltrados.length === 0 && <p>Nenhum CNAE encontrado.</p>}
               {cnaesFiltrados.map(cnae => (
                 <div key={cnae.id} className="cnae-item">
@@ -201,7 +212,7 @@ export default function NovaZona() {
               Cancelar
             </button>
             <button type="submit" className="btn-salvar" disabled={loading}>
-              {loading ? 'Salvando...' : (<><i className="fas fa-save"></i> Salvar Zona</>)}
+              {loading ? 'Processando...' : (<><i className="fas fa-save"></i> Salvar Zona</>)}
             </button>
           </div>
         </form>
