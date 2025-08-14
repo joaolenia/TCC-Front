@@ -1,0 +1,53 @@
+@import url('../zoneamento/Zoneamento.css');
+
+.cnae-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem; 
+}
+
+.cnae-card {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: var(--sombra-card);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-top: 5px solid var(--cor-texto); 
+}
+
+.cnae-card:hover {
+     transform: translateY(-5px);
+     box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.search-bar {
+    flex-grow: 1;
+    position: relative;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 0.8rem 1rem 0.8rem 2.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--cor-borda);
+    font-size: 1rem;
+}
+
+.search-bar i {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #adb5bd;
+}

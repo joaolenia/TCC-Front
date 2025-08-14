@@ -38,7 +38,7 @@ export default function Home() {
     const consultasFiltradas = useMemo(() => {
         return consultas.filter(consulta => {
             const correspondeFiltroStatus = filtroSituacao === 'TODAS' || consulta.situacao === filtroSituacao;
-            
+
             const correspondeBusca = termoBusca.trim() === '' ||
                 consulta.co_protocolo_redesim.toLowerCase().includes(termoBusca.toLowerCase()) ||
                 consulta.nome_solicitante.toLowerCase().includes(termoBusca.toLowerCase()) ||
@@ -94,6 +94,14 @@ export default function Home() {
                 >
                     <i className="fas fa-plus"></i> Gerenciar Zoneamento
                 </button>
+
+                <button
+                    className="btn-nova-consulta" 
+                    style={{ backgroundColor: 'var(--cor-sucesso)' }}
+                    onClick={() => navigate('/cnaes')}
+                >
+                    <i className="fas fa-briefcase"></i> Gerenciar CNAES
+                </button>
             </div>
 
             <main className="consultas-grid">
@@ -129,7 +137,7 @@ export default function Home() {
                         <div className="card-footer">
                             <span className="data">Recebido em: {formatarData(consulta.dt_solicitacao)}</span>
                             <button className="btn-detalhes"
-                            onClick={() => navigate(`/detalhes/${consulta.id}`)}>Ver Detalhes</button>
+                                onClick={() => navigate(`/detalhes/${consulta.id}`)}>Ver Detalhes</button>
                         </div>
                     </div>
                 ))}

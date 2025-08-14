@@ -1,4 +1,3 @@
-/* src/pages/Login.css */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 :root {
@@ -79,31 +78,28 @@
   font-size: 0.9rem;
 }
 
-/* Adicione estas classes ao seu arquivo Home.css existente */
 
 .stat-card {
-    cursor: pointer; /* Muda o cursor para indicar que é clicável */
-    transition: all 0.3s ease; /* Transição suave para todas as propriedades */
+    cursor: pointer; 
+    transition: all 0.3s ease;
 }
 
-/* Estilo para o card de estatística ativo (selecionado) */
 .stat-card.active {
     transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0, 86, 179, 0.2); /* Sombra mais forte na cor primária */
-    border-width: 5px; /* Deixa a borda mais grossa */
+    box-shadow: 0 8px 25px rgba(0, 86, 179, 0.2); 
+    border-width: 5px; 
 }
 
-/* Estilo para o destaque da situação dentro do card */
 .info-item.situacao-destaque {
-    background-color: #f0f4f8; /* Fundo levemente azulado */
+    background-color: #f0f4f8; 
     padding: 0.5rem;
     border-radius: 6px;
     margin-top: 0.5rem;
-    border-left: 3px solid var(--cor-primaria); /* Destaque na cor primária */
+    border-left: 3px solid var(--cor-primaria); 
 }
 
 .info-item.situacao-destaque span {
-    font-weight: 600; /* Deixa o texto da situação em negrito */
+    font-weight: 600; 
     color: var(--cor-titulo);
 }
 
