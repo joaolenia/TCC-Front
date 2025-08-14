@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchConsultasPreviasResumo } from '../services/cpv';
-import type { ConsultaPreviaResumo } from '../services/cpv';
+import { fetchConsultasPreviasResumo } from '../../services/cpv';
+import type { ConsultaPreviaResumo } from '../../services/cpv';
 import './Home.css';
 
 type SituacaoFiltro = 'TODAS' | 'DEFERIDO' | 'INDEFERIDO';
@@ -128,7 +128,8 @@ export default function Home() {
                         </div>
                         <div className="card-footer">
                             <span className="data">Recebido em: {formatarData(consulta.dt_solicitacao)}</span>
-                            <button className="btn-detalhes">Ver Detalhes</button>
+                            <button className="btn-detalhes"
+                            onClick={() => navigate(`/detalhes/${consulta.id}`)}>Ver Detalhes</button>
                         </div>
                     </div>
                 ))}

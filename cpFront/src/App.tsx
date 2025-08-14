@@ -1,12 +1,11 @@
 import React from 'react'; // 1. Linha adicionada
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import Home from './pages/Home';
-import DetalhesConsulta from './pages/Details';
+import Home from './pages/home/Home';
+import DetalhesConsulta from './pages/details/Details';
 import GerenciamentoZoneamento from './pages/zoneamento/Zoneamento';
 import NovaZona from './components/NovaZona';
-import Login from './pages/Login';
+import Login from './pages/login/Login';
 import EditarZona from './components/EditarZona';
-import GerenciamentoEnderecos from './pages/GerenciamentoEnderecos';
 
 type PrivateRouteProps = {
   children: React.ReactNode;
@@ -36,7 +35,7 @@ function App() {
         }
       />
       <Route
-        path="/detalhes"
+        path="/detalhes/:id"
         element={
           <PrivateRoute>
             <DetalhesConsulta />
@@ -73,15 +72,7 @@ function App() {
       />
 
       <Route path="*" element={<Navigate to="/" />} />
-
-            <Route 
-        path="/zoneamento/:id/enderecos" 
-        element={
-          <PrivateRoute>
-            <GerenciamentoEnderecos />
-          </PrivateRoute>
-        } 
-      />
+ 
 
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>

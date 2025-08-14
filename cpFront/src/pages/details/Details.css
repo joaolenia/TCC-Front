@@ -6,6 +6,7 @@
             --cor-primaria: #0056b3; /* Azul escuro */
             --cor-secundaria: #f8f9fa; /* Fundo cinza claro */
             --cor-texto: #495057;
+            --cor-destaque: #e7e7e7;
             --cor-titulo: #343a40;
             --cor-sucesso: #28a745;
             --cor-erro: #dc3545;
@@ -236,7 +237,7 @@
             font-size: 0.9rem;
             font-weight: 600;
             color: #fff;
-            background-color: var(--cor-sucesso);
+            background-color: var(--cor-destaque);
         }
 
         /* Ícones do Font Awesome */
