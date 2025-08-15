@@ -1,3 +1,4 @@
+// src/pages/cnaes/NovoCnae.tsx
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createCnae } from '../../services/cnaes';
@@ -30,23 +31,21 @@ export default function NovoCnae() {
   };
 
   return (
-    <div className="container">
-      <header className="top-header">
+    <div className="sigum-cnae-form-container">
+      <header className="sigum-cnae-form-header">
         <h1>
-          <i className="fas fa-plus-circle" style={{ color: 'var(--cor-primaria)' }}></i>{' '}
+          <i className="fas fa-plus-circle"></i>
           Cadastrar Novo CNAE
         </h1>
-      </header>
-      <nav className="nav-actions">
-        <button onClick={() => navigate('/cnaes')} className="btn-voltar">
+        <button onClick={() => navigate('/cnaes')} className="sigum-cnae-form-btn-voltar">
           <i className="fas fa-arrow-left"></i> Voltar à Lista
         </button>
-      </nav>
-      <main className="form-container">
-        <form onSubmit={handleSubmit} className="cnae-form">
-          <div className="form-card">
+      </header>
+      <main className="sigum-cnae-form-main">
+        <form onSubmit={handleSubmit} className="sigum-cnae-form-body">
+          <div className="sigum-cnae-form-card">
             <h3><i className="fas fa-briefcase"></i> Detalhes do CNAE</h3>
-            <div className="input-group">
+            <div className="sigum-cnae-form-input-group">
               <label htmlFor="codigo">Código</label>
               <input
                 id="codigo"
@@ -57,7 +56,7 @@ export default function NovoCnae() {
                 required
               />
             </div>
-            <div className="input-group">
+            <div className="sigum-cnae-form-input-group">
               <label htmlFor="descricao">Descrição</label>
               <textarea
                 id="descricao"
@@ -70,14 +69,14 @@ export default function NovoCnae() {
             </div>
           </div>
           
-          {error && <p className="error-message">{error}</p>}
+          {error && <p className="sigum-cnae-form-error-message">{error}</p>}
 
-          <div className="form-actions">
-            <button type="button" onClick={() => navigate('/cnaes')} className="btn-cancelar">
+          <div className="sigum-cnae-form-actions">
+            <button type="button" onClick={() => navigate('/cnaes')} className="sigum-cnae-form-btn-cancelar">
               Cancelar
             </button>
-            <button type="submit" className="btn-salvar" disabled={loading}>
-              {loading ? 'Salvando...' : (<><i className="fas fa-save"></i> Salvar CNAE</>)}
+            <button type="submit" className="sigum-cnae-form-btn-salvar" disabled={loading}>
+              {loading ? <span className="sigum-cnae-form-spinner"></span> : <><i className="fas fa-save"></i> Salvar CNAE</>}
             </button>
           </div>
         </form>

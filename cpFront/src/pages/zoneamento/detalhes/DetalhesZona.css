@@ -5,19 +5,26 @@
   gap: 2rem;
 }
 
+
+/* src/pages/zoneamento/detalhes/DetalhesZona.css */
+.map-card {
+  grid-column: 1 / -1; /* Ocupa a largura total na grade */
+}
+
+.map-container {
+  height: 450px;
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid var(--cor-borda);
+  z-index: 1;
+  margin-top: 1rem;
+}
+
 .zona-descricao {
   font-size: 1rem;
   color: var(--cor-texto);
   margin-bottom: 2rem;
 }
-
-.map-card {
-  background-color: #fff;
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: var(--sombra-card);
-}
-
 .map-card h3 {
   font-size: 1.3rem;
   color: var(--cor-titulo);
@@ -26,9 +33,21 @@
   border-bottom: 1px solid var(--cor-borda);
 }
 
-.map-container {
-  height: 450px;
-  width: 100%;
-  border-radius: 8px;
-  z-index: 1; 
+
+
+.tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+.tag {
+    background-color: #e9ecef;
+    color: var(--cor-texto);
+    padding: 0.4rem 0.9rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: help;
 }

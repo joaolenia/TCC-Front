@@ -1,53 +1,210 @@
-@import url('../zoneamento/Zoneamento.css');
+/* src/pages/cnaes/GerenciarCnaes.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css');
 
-.cnae-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-    gap: 1.5rem;
-    margin-top: 1.5rem; 
+:root {
+    --sigum-cnae-cor-primaria: #0056b3;
+    --sigum-cnae-cor-sucesso: #28a745;
+    --sigum-cnae-cor-fundo: #f0f2f5;
+    --sigum-cnae-cor-branco: #ffffff;
+    --sigum-cnae-cor-texto-escuro: #212529;
+    --sigum-cnae-cor-texto-claro: #6c757d;
+    --sigum-cnae-cor-borda: #dee2e6;
+    --sigum-cnae-sombra-card: 0 10px 30px rgba(0, 40, 100, 0.07);
 }
 
-.cnae-card {
-    background-color: #fff;
-    border-radius: 12px;
-    box-shadow: var(--sombra-card);
+.sigum-cnae-container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 2.5rem;
+    background-color: var(--sigum-cnae-cor-fundo);
+}
+
+.sigum-cnae-top-header {
+    margin-bottom: 1.5rem;
+}
+
+.sigum-cnae-top-header h1 {
+    font-size: 2.2rem;
+    color: var(--sigum-cnae-cor-texto-escuro);
+    font-weight: 700;
     display: flex;
-    flex-direction: column;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    border-top: 5px solid var(--cor-texto); 
+    align-items: center;
+    gap: 0.8rem;
 }
 
-.cnae-card:hover {
-     transform: translateY(-5px);
-     box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+.sigum-cnae-top-header i {
+    color: var(--sigum-cnae-cor-primaria);
 }
 
-.toolbar {
+.sigum-cnae-top-header p {
+    color: var(--sigum-cnae-cor-texto-claro);
+    font-size: 1rem;
+    margin-top: 0.2rem;
+}
+
+.sigum-cnae-nav-actions {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
-    gap: 1rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--sigum-cnae-cor-borda);
+    margin-bottom: 2.5rem;
     flex-wrap: wrap;
+    gap: 1rem;
 }
 
-.search-bar {
-    flex-grow: 1;
-    position: relative;
+.sigum-cnae-btn-voltar {
+    background: var(--sigum-cnae-cor-branco);
+    border: 1px solid var(--sigum-cnae-cor-borda);
+    color: var(--sigum-cnae-cor-texto-escuro);
+    padding: 0.7rem 1.4rem;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    transition: all 0.3s ease;
 }
 
-.search-bar input {
-    width: 100%;
-    padding: 0.8rem 1rem 0.8rem 2.5rem;
-    border-radius: 8px;
-    border: 1px solid var(--cor-borda);
+.sigum-cnae-btn-voltar:hover {
+    background-color: #f8f9fa;
+    border-color: #c1c9d3;
+}
+
+.sigum-cnae-btn-novo {
+    background-color: var(--sigum-cnae-cor-sucesso);
+    color: #fff;
+    padding: 0.8rem 1.6rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
     font-size: 1rem;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
 }
 
-.search-bar i {
+.sigum-cnae-btn-novo:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);
+}
+
+.sigum-cnae-toolbar {
+    margin-bottom: 2.5rem;
+}
+
+.sigum-cnae-search-bar {
+    position: relative;
+    max-width: 500px;
+}
+
+.sigum-cnae-search-bar input {
+    width: 100%;
+    padding: 1rem 1.2rem 1rem 3rem;
+    border-radius: 12px;
+    border: 1px solid var(--sigum-cnae-cor-borda);
+    font-size: 1rem;
+    background-color: var(--sigum-cnae-cor-branco);
+    transition: all 0.3s ease;
+}
+
+.sigum-cnae-search-bar input:focus {
+    outline: none;
+    border-color: var(--sigum-cnae-cor-primaria);
+    box-shadow: 0 0 0 4px rgba(0, 86, 179, 0.1);
+}
+
+.sigum-cnae-search-bar i {
     position: absolute;
-    left: 1rem;
+    left: 1.2rem;
     top: 50%;
     transform: translateY(-50%);
-    color: #adb5bd;
+    color: var(--sigum-cnae-cor-texto-claro);
+}
+
+.sigum-cnae-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1.8rem;
+}
+
+.sigum-cnae-card {
+    background-color: var(--sigum-cnae-cor-branco);
+    border-radius: 16px;
+    box-shadow: var(--sigum-cnae-sombra-card);
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+}
+
+.sigum-cnae-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 40, 100, 0.12);
+}
+
+.sigum-cnae-card-header {
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--sigum-cnae-cor-borda);
+}
+
+.sigum-cnae-card-title {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--sigum-cnae-cor-texto-escuro);
+}
+
+.sigum-cnae-card-title i {
+    color: var(--sigum-cnae-cor-primaria);
+}
+
+.sigum-cnae-btn-editar {
+    background: none;
+    border: none;
+    color: var(--sigum-cnae-cor-texto-claro);
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sigum-cnae-btn-editar:hover {
+    background-color: #e9ecef;
+    color: var(--sigum-cnae-cor-primaria);
+}
+
+.sigum-cnae-card-body {
+    padding: 1.5rem;
+    font-size: 0.95rem;
+    color: var(--sigum-cnae-cor-texto-claro);
+    line-height: 1.6;
+}
+
+.sigum-cnae-loading-message,
+.sigum-cnae-error-message,
+.sigum-cnae-no-results {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 4rem;
+    font-size: 1.2rem;
+    color: var(--sigum-cnae-cor-texto-claro);
+}
+
+.sigum-cnae-error-message {
+    color: var(--sigum-cnae-cor-erro);
 }

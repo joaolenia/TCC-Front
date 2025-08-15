@@ -1,3 +1,4 @@
+// src/pages/cnaes/GerenciarCnaes.tsx
 import './GerenciarCnaes.css';
 import { fetchCnaes } from '../../services/cnaes';
 import { useState, useEffect, useMemo } from 'react';
@@ -34,31 +35,33 @@ export default function GerenciarCnaes() {
     if (!termoBusca) {
       return cnaes;
     }
+    const termo = termoBusca.toLowerCase();
     return cnaes.filter(cnae =>
-      cnae.codigo.toLowerCase().includes(termoBusca.toLowerCase()) ||
-      cnae.descricao.toLowerCase().includes(termoBusca.toLowerCase())
+      cnae.codigo.toLowerCase().includes(termo) ||
+      cnae.descricao.toLowerCase().includes(termo)
     );
   }, [termoBusca, cnaes]);
 
-  if (loading) return <div className="container">Carregando CNAEs...</div>;
-  if (error) return <div className="container">Erro: {error}</div>;
+  if (loading) return <div className="sigum-cnae-container"><p className="sigum-cnae-loading-message">Carregando CNAEs...</p></div>;
+  if (error) return <div className="sigum-cnae-container"><p className="sigum-cnae-error-message">Erro: {error}</p></div>;
 
   return (
-    <div className="container">
-      <header className="top-header">
+    <div className="sigum-cnae-container">
+      <header className="sigum-cnae-top-header">
         <h1>
-          <i className="fas fa-briefcase" style={{ color: 'var(--cor-primaria)' }}></i>{' '}
+          <i className="fas fa-briefcase"></i>
           Gerenciamento de CNAE
         </h1>
+        <p>Consulte, adicione ou edite os códigos de atividades econômicas.</p>
       </header>
 
-      <nav className="nav-actions">
-        <a href="/home" className="btn-voltar" onClick={() => navigate('/home')}>
+      <nav className="sigum-cnae-nav-actions">
+        <button className="sigum-cnae-btn-voltar" onClick={() => navigate('/home')}>
           <i className="fas fa-arrow-left"></i> Voltar ao Painel
-        </a>
+        </button>
         {userRole === 'ADMIN' && (
           <button
-            className="btn-nova-zona"
+            className="sigum-cnae-btn-novo"
             onClick={() => navigate('/cnaes/novo')}
           >
             <i className="fas fa-plus"></i> Cadastrar Novo CNAE
@@ -66,8 +69,8 @@ export default function GerenciarCnaes() {
         )}
       </nav>
 
-      <div className="toolbar">
-        <div className="search-bar">
+      <div className="sigum-cnae-toolbar">
+        <div className="sigum-cnae-search-bar">
           <i className="fas fa-search"></i>
           <input
               type="text"
@@ -78,24 +81,31 @@ export default function GerenciarCnaes() {
         </div>
       </div>
 
-      <main className="cnae-grid">
+      <main className="sigum-cnae-grid">
         {cnaesFiltrados.map((cnae) => (
-          <div key={cnae.id} className="cnae-card">
-            <div className="card-header">
-              <h3>{cnae.codigo}</h3>
+          <div key={cnae.id} className="sigum-cnae-card">
+            <div className="sigum-cnae-card-header">
+                <div className="sigum-cnae-card-title">
+                    <i className="fas fa-tag"></i>
+                    <h3>{cnae.codigo}</h3>
+                </div>
               {userRole === 'ADMIN' && (
-                <button className="btn-editar"
+                <button className="sigum-cnae-btn-editar"
                  onClick={() => navigate(`/cnaes/editar/${cnae.id}`)}>
-                  <i className="fas fa-pencil-alt"></i> Editar
+                  <i className="fas fa-pencil-alt"></i>
                 </button>
               )}
             </div>
-            <div className="card-body">
+            <div className="sigum-cnae-card-body">
               <p>{cnae.descricao}</p>
             </div>
           </div>
         ))}
-        {!loading && cnaesFiltrados.length === 0 && <p>Nenhum CNAE encontrado para o filtro aplicado.</p>}
+        {!loading && cnaesFiltrados.length === 0 && (
+            <div className="sigum-cnae-no-results">
+                <p>Nenhum CNAE encontrado para o filtro aplicado.</p>
+            </div>
+        )}
       </main>
     </div>
   );
