@@ -1,213 +1,236 @@
-   /* Importação da fonte do Google Fonts */
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css');
 
-        /* Reset e Configurações Globais */
-        :root {
-            --cor-primaria: #0056b3; /* Azul escuro */
-            --cor-secundaria: #f8f9fa; /* Fundo cinza claro */
-            --cor-texto: #495057;
-            --cor-titulo: #343a40;
-            --cor-sucesso: #28a745;
-            --cor-info: #17a2b8;
-            --cor-aviso: #ffc107;
-            --cor-borda: #dee2e6;
-            --sombra-card: 0 4px 12px rgba(0, 0, 0, 0.08);
-        }
+:root {
+    --sigum-zoneamento-cor-primaria: #0056b3;
+    --sigum-zoneamento-cor-sucesso: #28a745;
+    --sigum-zoneamento-cor-info: #17a2b8;
+    --sigum-zoneamento-cor-aviso: #ffc107;
+    --sigum-zoneamento-cor-fundo: #f0f2f5;
+    --sigum-zoneamento-cor-branco: #ffffff;
+    --sigum-zoneamento-cor-texto-escuro: #212529;
+    --sigum-zoneamento-cor-texto-claro: #6c757d;
+    --sigum-zoneamento-cor-borda: #dee2e6;
+    --sigum-zoneamento-sombra-card: 0 10px 30px rgba(0, 40, 100, 0.07);
+}
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+.sigum-zoneamento-container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 2.5rem;
+    background-color: var(--sigum-zoneamento-cor-fundo);
+}
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--cor-secundaria);
-            color: var(--cor-texto);
-            line-height: 1.6;
-        }
+.sigum-zoneamento-top-header {
+    margin-bottom: 1.5rem;
+}
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
+.sigum-zoneamento-top-header h1 {
+    font-size: 2.2rem;
+    color: var(--sigum-zoneamento-cor-texto-escuro);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
 
-        /* Cabeçalho Superior */
-        .top-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-        
-        .top-header h1 {
-            font-size: 1.8rem;
-            color: var(--cor-titulo);
-            font-weight: 600;
-        }
+.sigum-zoneamento-top-header p {
+    color: var(--sigum-zoneamento-cor-texto-claro);
+    font-size: 1rem;
+    margin-top: 0.2rem;
+}
 
-        /* Barra de Navegação e Ações */
-        .nav-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-bottom: 1.5rem;
-            border-bottom: 1px solid var(--cor-borda);
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
+.sigum-zoneamento-nav-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--sigum-zoneamento-cor-borda);
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
 
-        .btn-voltar {
-            background: none;
-            border: 1px solid var(--cor-borda);
-            color: var(--cor-texto);
-            padding: 0.6rem 1.2rem;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 500;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.2s ease;
-        }
+.sigum-zoneamento-btn-voltar {
+    background: var(--sigum-zoneamento-cor-branco);
+    border: 1px solid var(--sigum-zoneamento-cor-borda);
+    color: var(--sigum-zoneamento-cor-texto-escuro);
+    padding: 0.7rem 1.4rem;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    transition: all 0.3s ease;
+}
 
-        .btn-voltar:hover {
-            background-color: #e9ecef;
-            border-color: #adb5bd;
-        }
-        
-        .btn-nova-zona {
-            background-color: var(--cor-sucesso);
-            color: #fff;
-            padding: 0.7rem 1.5rem;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 500;
-            font-size: 0.95rem;
-            transition: background-color 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
+.sigum-zoneamento-btn-voltar:hover {
+    background-color: #f8f9fa;
+    border-color: #c1c9d3;
+}
 
-        .btn-nova-zona:hover {
-            background-color: #218838;
-        }
+.sigum-zoneamento-btn-nova-zona {
+    background-color: var(--sigum-zoneamento-cor-sucesso);
+    color: #fff;
+    padding: 0.8rem 1.6rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+}
 
-        /* Grade de Zonas */
-        .zonas-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-            gap: 1.5rem;
-        }
+.sigum-zoneamento-btn-nova-zona:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);
+}
 
-        .zona-card {
-            background-color: #fff;
-            border-radius: 12px;
-            box-shadow: var(--sombra-card);
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            border-top: 5px solid;
-        }
-        
-        .zona-card:hover {
-             transform: translateY(-5px);
-             box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-        }
+.sigum-zoneamento-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 1.8rem;
+}
 
-        /* Cores das bordas dos cards */
-        .zona-card.comercial { border-color: var(--cor-primaria); }
-        .zona-card.residencial { border-color: var(--cor-info); }
-        .zona-card.industrial { border-color: var(--cor-texto); }
-        .zona-card.mista { border-color: var(--cor-aviso); }
+.sigum-zoneamento-card {
+    background-color: var(--sigum-zoneamento-cor-branco);
+    border-radius: 16px;
+    box-shadow: var(--sigum-zoneamento-sombra-card);
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+    border-top: 5px solid;
+}
 
-        .card-header {
-            padding: 1.5rem 1.5rem 1rem 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .card-header h3 {
-            font-size: 1.3rem;
-            color: var(--cor-titulo);
-            font-weight: 600;
-        }
-        
-        .btn-editar {
-            background: none;
-            border: 1px solid var(--cor-borda);
-            color: var(--cor-primaria);
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.9rem;
-        }
-        
-        .btn-editar:hover {
-            background-color: var(--cor-primaria);
-            color: #fff;
-            border-color: var(--cor-primaria);
-        }
+.sigum-zoneamento-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 40, 100, 0.12);
+}
 
-        .card-body {
-            padding: 0 1.5rem 1.5rem 1.5rem;
-            flex-grow: 1;
-        }
-        
-        .card-body p {
-            font-size: 0.95rem;
-            margin-bottom: 1.5rem;
-            color: #6c757d;
-        }
-        
-        .atividades-section h4 {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--cor-titulo);
-            margin-bottom: 0.8rem;
-        }
-        
-        .tags-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-        
-        .tag {
-            padding: 0.3rem 0.8rem;
-            border-radius: 15px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            background-color: #e9ecef;
-            color: var(--cor-texto);
-        }
+.sigum-zoneamento-card.comercial { border-color: var(--sigum-zoneamento-cor-primaria); }
+.sigum-zoneamento-card.residencial { border-color: var(--sigum-zoneamento-cor-info); }
+.sigum-zoneamento-card.industrial { border-color: #616e7c; }
+.sigum-zoneamento-card.mista { border-color: var(--sigum-zoneamento-cor-aviso); }
+.sigum-zoneamento-card.default { border-color: var(--sigum-zoneamento-cor-texto-claro); }
 
-        /* Ícones do Font Awesome */
-        @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css');
+.sigum-zoneamento-card-header {
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
 
-        /* Responsividade */
-        @media (max-width: 992px) {
-            .zonas-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-        @media (max-width: 768px) {
-             .nav-actions {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .btn-nova-zona {
-                justify-content: center;
-            }
-        }
+.sigum-zoneamento-card-title {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.sigum-zoneamento-type-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    color: var(--sigum-zoneamento-cor-branco);
+}
+
+.sigum-zoneamento-type-icon.comercial { background-color: var(--sigum-zoneamento-cor-primaria); }
+.sigum-zoneamento-type-icon.residencial { background-color: var(--sigum-zoneamento-cor-info); }
+.sigum-zoneamento-type-icon.industrial { background-color: #616e7c; }
+.sigum-zoneamento-type-icon.mista { background-color: var(--sigum-zoneamento-cor-aviso); }
+.sigum-zoneamento-type-icon.default { background-color: var(--sigum-zoneamento-cor-texto-claro); }
+
+.sigum-zoneamento-card-header h3 {
+    font-size: 1.4rem;
+    color: var(--sigum-zoneamento-cor-texto-escuro);
+    font-weight: 600;
+}
+
+.sigum-zoneamento-card-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.sigum-zoneamento-btn-action {
+    background: var(--sigum-zoneamento-cor-secundaria);
+    border: 1px solid var(--sigum-zoneamento-cor-borda);
+    color: var(--sigum-zoneamento-cor-texto-claro);
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sigum-zoneamento-btn-action:hover {
+    background-color: var(--sigum-zoneamento-cor-primaria);
+    color: var(--sigum-zoneamento-cor-branco);
+    border-color: var(--sigum-zoneamento-cor-primaria);
+}
+
+.sigum-zoneamento-card-body {
+    padding: 0 1.5rem 1.5rem;
+    flex-grow: 1;
+}
+
+.sigum-zoneamento-card-description {
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+    color: var(--sigum-zoneamento-cor-texto-claro);
+    line-height: 1.6;
+}
+
+.sigum-zoneamento-atividades-section h4 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--sigum-zoneamento-cor-texto-claro);
+    margin-bottom: 0.8rem;
+}
+
+.sigum-zoneamento-tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+}
+
+.sigum-zoneamento-tag {
+    padding: 0.4rem 0.9rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    background-color: #e9ecef;
+    color: var(--sigum-zoneamento-cor-texto-escuro);
+}
+
+.sigum-zoneamento-tag.more {
+    background-color: var(--sigum-zoneamento-cor-primaria);
+    color: var(--sigum-zoneamento-cor-branco);
+    font-weight: 600;
+}
+
+.sigum-zoneamento-loading-message,
+.sigum-zoneamento-error-message {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 4rem;
+    font-size: 1.2rem;
+    color: var(--sigum-zoneamento-cor-texto-claro);
+}
+
+.sigum-zoneamento-error-message {
+    color: var(--sigum-zoneamento-cor-erro);
+}

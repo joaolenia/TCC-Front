@@ -26,11 +26,9 @@ export default function NovaZona() {
   const [fileName, setFileName] = useState<string>('');
 
   useEffect(() => {
-    setLoading(true);
     fetchCnaes()
       .then(data => setCnaesDisponiveis(data))
-      .catch(() => setError('Falha ao carregar a lista de CNAEs.'))
-      .finally(() => setLoading(false));
+      .catch(() => setError('Falha ao carregar a lista de CNAEs.'));
   }, []);
 
   const handleCnaeChange = (cnaeId: number) => {
@@ -46,7 +44,7 @@ export default function NovaZona() {
       return cnaesDisponiveis;
     }
     return cnaesDisponiveis.filter(cnae =>
-      cnae.codigo.includes(termoBusca) ||
+      cnae.codigo.toLowerCase().includes(termoBusca.toLowerCase()) ||
       cnae.descricao.toLowerCase().includes(termoBusca.toLowerCase())
     );
   }, [termoBusca, cnaesDisponiveis]);
@@ -60,7 +58,6 @@ export default function NovaZona() {
     }
 
     setFileName(file.name);
-    setLoading(true);
     setError(null);
 
     try {
@@ -78,7 +75,7 @@ export default function NovaZona() {
       const geoJson = kml(kmlDom);
 
       if (!geoJson.features || geoJson.features.length === 0) {
-        throw new Error('O arquivo KML não contém dados geográficos (features) válidos para conversão.');
+        throw new Error('O arquivo KML não contém dados geográficos válidos.');
       }
 
       setGeoJsonArea(geoJson);
@@ -87,132 +84,94 @@ export default function NovaZona() {
       setError(`Erro ao processar o arquivo: ${err.message}`);
       setGeoJsonArea(null);
       setFileName('');
-    } finally {
-      setLoading(false);
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!nome || cnaesSelecionados.length === 0 || !geoJsonArea) {
-      setError('O nome da zona, a seleção de ao menos um CNAE e um arquivo KMZ válido são obrigatórios.');
+      setError('O nome da zona, um CNAE e um arquivo KMZ são obrigatórios.');
       return;
     }
     setLoading(true);
     setError(null);
 
     try {
-      const novaZona = {
+      await createZoneamento({
         nome,
         descricao,
         cnaesPermitidosIds: cnaesSelecionados,
-        area: geoJsonArea, 
-      };
-
-      await createZoneamento(novaZona);
+        area: geoJsonArea,
+      });
       navigate('/zoneamento');
     } catch (err: any) {
-      setError(err.message || 'Erro ao salvar a nova zona. Verifique os dados e tente novamente.');
+      setError(err.message || 'Erro ao salvar a nova zona.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="container">
-      <header className="top-header">
-        <h1>
-          <i className="fas fa-plus-circle" style={{ color: 'var(--cor-primaria)' }}></i>{' '}
-          Cadastrar Nova Zona
-        </h1>
-      </header>
-      <nav className="nav-actions">
-        <button onClick={() => navigate('/zoneamento')} className="btn-voltar">
+    <div className="sigum-zona-form-container">
+      <header className="sigum-zona-form-header">
+        <h1><i className="fas fa-plus-circle"></i> Cadastrar Nova Zona</h1>
+        <button onClick={() => navigate('/zoneamento')} className="sigum-zona-form-btn-voltar">
           <i className="fas fa-arrow-left"></i> Voltar à Lista
         </button>
-      </nav>
-      <main className="form-container">
-        <form onSubmit={handleSubmit} className="zona-form">
-          <div className="form-card">
+      </header>
+      
+      <main className="sigum-zona-form-main">
+        <form onSubmit={handleSubmit} className="sigum-zona-form-body">
+          <div className="sigum-zona-form-card">
             <h3><i className="fas fa-map-marked-alt"></i> Detalhes da Zona</h3>
-            <div className="input-group">
+            <div className="sigum-zona-form-input-group">
               <label htmlFor="nome">Nome da Zona</label>
-              <input
-                id="nome"
-                type="text"
-                value={nome}
-                onChange={(e) => setNome(e.target.value)}
-                placeholder="Ex: Zona Industrial Agro"
-                required
-              />
+              <input id="nome" type="text" value={nome} onChange={(e) => setNome(e.target.value)} placeholder="Ex: Zona Comercial Central" required />
             </div>
-            <div className="input-group">
+            <div className="sigum-zona-form-input-group">
               <label htmlFor="descricao">Descrição</label>
-              <textarea
-                id="descricao"
-                value={descricao}
-                onChange={(e) => setDescricao(e.target.value)}
-                placeholder="Ex: Área para atividades industriais relacionadas ao agronegócio"
-                rows={4}
-              />
+              <textarea id="descricao" value={descricao} onChange={(e) => setDescricao(e.target.value)} placeholder="Ex: Área destinada a comércios e serviços" rows={4}></textarea>
             </div>
-            <div className="input-group">
-              <label htmlFor="kmz-upload">Arquivo de Área Geográfica (KMZ)</label>
-              <div className="file-upload-wrapper">
-                <input
-                  type="file"
-                  id="kmz-upload"
-                  accept=".kmz"
-                  onChange={handleFileChange}
-                  required
-                />
-                <label htmlFor="kmz-upload" className="file-upload-label">
-                  <i className="fas fa-upload"></i>
-                  {fileName ? `Arquivo: ${fileName}` : 'Escolher arquivo KMZ'}
+            <div className="sigum-zona-form-input-group">
+              <label htmlFor="kmz-upload">Área Geográfica (KMZ)</label>
+              <div className="sigum-zona-form-file-upload-wrapper">
+                <input type="file" id="kmz-upload" accept=".kmz" onChange={handleFileChange} required />
+                <label htmlFor="kmz-upload" className="sigum-zona-form-file-upload-label">
+                  <i className={`fas ${geoJsonArea ? 'fa-check-circle' : 'fa-upload'}`}></i>
+                  <span>{fileName || 'Escolher arquivo KMZ'}</span>
                 </label>
               </div>
-              {geoJsonArea && <p className="success-message">Arquivo processado com sucesso!</p>}
             </div>
           </div>
 
-          <div className="form-card">
+          <div className="sigum-zona-form-card">
             <h3><i className="fas fa-tasks"></i> Atividades Permitidas (CNAE)</h3>
-            <div className="cnae-search-bar">
+            <div className="sigum-zona-form-cnae-search-bar">
               <i className="fas fa-search"></i>
-              <input
-                type="text"
-                placeholder="Buscar por código ou descrição do CNAE..."
-                value={termoBusca}
-                onChange={(e) => setTermoBusca(e.target.value)}
-              />
+              <input type="text" placeholder="Buscar por código ou descrição do CNAE..." value={termoBusca} onChange={(e) => setTermoBusca(e.target.value)} />
             </div>
-            <div className="cnae-list">
-              {loading && !cnaesDisponiveis.length && <p>Carregando CNAEs...</p>}
-              {!loading && cnaesFiltrados.length === 0 && <p>Nenhum CNAE encontrado.</p>}
+            <div className="sigum-zona-form-cnae-list">
+              {cnaesDisponiveis.length === 0 && !loading && <p>Carregando CNAEs...</p>}
+              {cnaesFiltrados.length === 0 && termoBusca && <p>Nenhum CNAE encontrado.</p>}
               {cnaesFiltrados.map(cnae => (
-                <div key={cnae.id} className="cnae-item">
-                  <input
-                    type="checkbox"
-                    id={`cnae-${cnae.id}`}
-                    checked={cnaesSelecionados.includes(cnae.id)}
-                    onChange={() => handleCnaeChange(cnae.id)}
-                  />
+                <div key={cnae.id} className="sigum-zona-form-cnae-item">
+                  <input type="checkbox" id={`cnae-${cnae.id}`} checked={cnaesSelecionados.includes(cnae.id)} onChange={() => handleCnaeChange(cnae.id)} />
                   <label htmlFor={`cnae-${cnae.id}`} title={cnae.descricao}>
-                    {cnae.codigo} - {cnae.descricao}
+                    <strong>{cnae.codigo}</strong> - {cnae.descricao}
                   </label>
                 </div>
               ))}
             </div>
           </div>
           
-          {error && <p className="error-message">{error}</p>}
+          {error && <p className="sigum-zona-form-error-message">{error}</p>}
 
-          <div className="form-actions">
-            <button type="button" onClick={() => navigate('/zoneamento')} className="btn-cancelar">
+          <div className="sigum-zona-form-actions">
+            <button type="button" onClick={() => navigate('/zoneamento')} className="sigum-zona-form-btn-cancelar">
               Cancelar
             </button>
-            <button type="submit" className="btn-salvar" disabled={loading}>
-              {loading ? 'Processando...' : (<><i className="fas fa-save"></i> Salvar Zona</>)}
+            <button type="submit" className="sigum-zona-form-btn-salvar" disabled={loading}>
+              {loading ? <span className="sigum-zona-form-spinner"></span> : <><i className="fas fa-save"></i> Salvar Zona</>}
             </button>
           </div>
         </form>

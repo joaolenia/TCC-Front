@@ -14,9 +14,15 @@ export default function GerenciarCnaes() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [termoBusca, setTermoBusca] = useState('');
+  const [userRole, setUserRole] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
+    const user = localStorage.getItem('user');
+    if (user) {
+      setUserRole(JSON.parse(user).role);
+    }
+
     setLoading(true);
     fetchCnaes()
       .then((data) => setCnaes(data))
@@ -47,15 +53,17 @@ export default function GerenciarCnaes() {
       </header>
 
       <nav className="nav-actions">
-        <a href="#" className="btn-voltar" onClick={() => navigate('/')}>
+        <a href="/home" className="btn-voltar" onClick={() => navigate('/home')}>
           <i className="fas fa-arrow-left"></i> Voltar ao Painel
         </a>
-        <button
-          className="btn-nova-zona"
-          onClick={() => navigate('/cnaes/novo')}
-        >
-          <i className="fas fa-plus"></i> Cadastrar Novo CNAE
-        </button>
+        {userRole === 'ADMIN' && (
+          <button
+            className="btn-nova-zona"
+            onClick={() => navigate('/cnaes/novo')}
+          >
+            <i className="fas fa-plus"></i> Cadastrar Novo CNAE
+          </button>
+        )}
       </nav>
 
       <div className="toolbar">
@@ -75,10 +83,12 @@ export default function GerenciarCnaes() {
           <div key={cnae.id} className="cnae-card">
             <div className="card-header">
               <h3>{cnae.codigo}</h3>
-              <button className="btn-editar"
-               onClick={() => navigate(`/cnaes/editar/${cnae.id}`)}>
-                <i className="fas fa-pencil-alt"></i> Editar
-              </button>
+              {userRole === 'ADMIN' && (
+                <button className="btn-editar"
+                 onClick={() => navigate(`/cnaes/editar/${cnae.id}`)}>
+                  <i className="fas fa-pencil-alt"></i> Editar
+                </button>
+              )}
             </div>
             <div className="card-body">
               <p>{cnae.descricao}</p>

@@ -1,4 +1,3 @@
-/* Importa estilos base para consistência */
 
 .details-zona-layout {
   display: grid;
@@ -31,5 +30,5 @@
   height: 450px;
   width: 100%;
   border-radius: 8px;
-  z-index: 1; /* Garante que o mapa fique visível */
+  z-index: 1; 
 }

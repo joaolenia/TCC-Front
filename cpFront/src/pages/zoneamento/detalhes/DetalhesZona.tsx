@@ -1,12 +1,11 @@
-import { useState, useEffect } from 'react'; // 1. Importar useRef
+import { useState, useEffect } from 'react'; 
 import { useParams, useNavigate } from 'react-router-dom';
 import { fetchZoneamentoById } from '../../../services/zoneamento';
-import { MapContainer, TileLayer, GeoJSON, useMap } from 'react-leaflet'; // 2. Importar useMap
-import L, {  } from 'leaflet'; // 3. Importar L e o tipo LatLngBounds
+import { MapContainer, TileLayer, GeoJSON, useMap } from 'react-leaflet'; 
+import L, {  } from 'leaflet'; 
 import 'leaflet/dist/leaflet.css';
 import './DetalhesZona.css';
 
-// ... (O tipo Zona e a função calcularCentroide permanecem os mesmos)
 type Zona = {
     id: number;
     nome: string;
@@ -41,8 +40,6 @@ const calcularCentroide = (geoJson: any): [number, number] => {
     return [latSum / count, lonSum / count];
 };
 
-// --- 4. NOVO COMPONENTE AUXILIAR ---
-// Este componente acessa o mapa e ajusta os limites
 function FitBounds({ geoJsonData }: { geoJsonData: any }) {
     const map = useMap();
     useEffect(() => {
@@ -54,11 +51,10 @@ function FitBounds({ geoJsonData }: { geoJsonData: any }) {
             }
         }
     }, [geoJsonData, map]);
-    return null; // Este componente não renderiza nada
+    return null; 
 }
 
 export default function DetalhesZona() {
-    // ... (toda a sua lógica de state e useEffect permanece a mesma)
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const [zona, setZona] = useState<Zona | null>(null);
@@ -86,7 +82,6 @@ export default function DetalhesZona() {
 
     return (
         <div className="container">
-            {/* ... (header e nav permanecem os mesmos) */}
              <header className="top-header">
                <h1><i className="fas fa-map-marked-alt"></i> Detalhes da Zona</h1>
              </header>
@@ -99,7 +94,6 @@ export default function DetalhesZona() {
 
 
             <main className="details-zona-layout">
-                {/* ... (info-card permanece o mesmo) */}
                 <div className="info-card">
                   <h3>{zona.nome}</h3>
                   <p className="zona-descricao">{zona.descricao}</p>
@@ -114,14 +108,12 @@ export default function DetalhesZona() {
                 <div className="map-card">
                     <h3>Visualização Geográfica</h3>
                     {zona.area ? (
-                        // 5. Remova a prop 'zoom' e 'center' daqui
                         <MapContainer scrollWheelZoom={true} className="map-container">
                             <TileLayer
                                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                             />
                             <GeoJSON data={zona.area} />
-                            {/* 6. Adicione o novo componente aqui */}
                             <FitBounds geoJsonData={zona.area} />
                         </MapContainer>
                     ) : (

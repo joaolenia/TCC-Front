@@ -13,8 +13,17 @@ export default function Home() {
     const [error, setError] = useState<string | null>(null);
     const [filtroSituacao, setFiltroSituacao] = useState<SituacaoFiltro>('TODAS');
     const [termoBusca, setTermoBusca] = useState('');
+    const [userLogin, setUserLogin] = useState('');
+    const [userRole, setUserRole] = useState<string | null>(null);
 
     useEffect(() => {
+        const user = localStorage.getItem('user');
+        if (user) {
+            const parsedUser = JSON.parse(user);
+            setUserLogin(parsedUser.email);
+            setUserRole(parsedUser.role);
+        }
+
         fetchConsultasPreviasResumo()
             .then(data => {
                 setConsultas(data);
@@ -27,6 +36,12 @@ export default function Home() {
             });
     }, []);
 
+    const handleLogout = () => {
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('user');
+        navigate('/login');
+    };
+
     const estatisticas = useMemo(() => {
         return {
             total: consultas.length,
@@ -38,12 +53,10 @@ export default function Home() {
     const consultasFiltradas = useMemo(() => {
         return consultas.filter(consulta => {
             const correspondeFiltroStatus = filtroSituacao === 'TODAS' || consulta.situacao === filtroSituacao;
-
             const correspondeBusca = termoBusca.trim() === '' ||
                 consulta.co_protocolo_redesim.toLowerCase().includes(termoBusca.toLowerCase()) ||
                 consulta.nome_solicitante.toLowerCase().includes(termoBusca.toLowerCase()) ||
                 consulta.endereco.toLowerCase().includes(termoBusca.toLowerCase());
-
             return correspondeFiltroStatus && correspondeBusca;
         });
     }, [consultas, filtroSituacao, termoBusca]);
@@ -54,32 +67,49 @@ export default function Home() {
     };
 
     return (
-        <div className="container">
-            <header className="header">
-                <h1>Painel de Consultas</h1>
-                <div className="user-profile">
-                    <span>Servidor Municipal</span>
-                    <img src="https://i.pravatar.cc/150?img=12" alt="Foto do servidor" />
+        <div className="sigum-home-page-container">
+            <header className="sigum-home-header">
+                <div className="sigum-home-header-title">
+                    <h1>Painel de Consultas</h1>
+                    <p>Visão geral das solicitações de viabilidade</p>
+                </div>
+                <div className="sigum-home-user-profile">
+                    <div className="sigum-home-user-info">
+                        <span className="sigum-home-user-name">{userLogin}</span>
+                        <span className="sigum-home-user-role">{userRole}</span>
+                    </div>
+                    <button onClick={handleLogout} className="sigum-home-logout-button" title="Sair">
+                        <i className="fas fa-sign-out-alt"></i>
+                    </button>
                 </div>
             </header>
 
-            <section className="stats-panel">
-                <div className={`stat-card total ${filtroSituacao === 'TODAS' ? 'active' : ''}`} onClick={() => setFiltroSituacao('TODAS')}>
-                    <h3>Total de Solicitações</h3>
-                    <p>{estatisticas.total}</p>
+            <section className="sigum-home-stats-panel">
+                <div className={`sigum-home-stat-card total ${filtroSituacao === 'TODAS' ? 'active' : ''}`} onClick={() => setFiltroSituacao('TODAS')}>
+                    <div className="sigum-home-stat-icon"><i className="fas fa-layer-group"></i></div>
+                    <div className="sigum-home-stat-info">
+                        <h3>Total de Solicitações</h3>
+                        <p>{estatisticas.total}</p>
+                    </div>
                 </div>
-                <div className={`stat-card aprovadas ${filtroSituacao === 'DEFERIDO' ? 'active' : ''}`} onClick={() => setFiltroSituacao('DEFERIDO')}>
-                    <h3>Consultas Deferidas</h3>
-                    <p>{estatisticas.deferidas}</p>
+                <div className={`sigum-home-stat-card aprovadas ${filtroSituacao === 'DEFERIDO' ? 'active' : ''}`} onClick={() => setFiltroSituacao('DEFERIDO')}>
+                    <div className="sigum-home-stat-icon"><i className="fas fa-check-circle"></i></div>
+                    <div className="sigum-home-stat-info">
+                        <h3>Consultas Deferidas</h3>
+                        <p>{estatisticas.deferidas}</p>
+                    </div>
                 </div>
-                <div className={`stat-card rejeitadas ${filtroSituacao === 'INDEFERIDO' ? 'active' : ''}`} onClick={() => setFiltroSituacao('INDEFERIDO')}>
-                    <h3>Consultas Indeferidas</h3>
-                    <p>{estatisticas.indeferidas}</p>
+                <div className={`sigum-home-stat-card rejeitadas ${filtroSituacao === 'INDEFERIDO' ? 'active' : ''}`} onClick={() => setFiltroSituacao('INDEFERIDO')}>
+                     <div className="sigum-home-stat-icon"><i className="fas fa-times-circle"></i></div>
+                    <div className="sigum-home-stat-info">
+                        <h3>Consultas Indeferidas</h3>
+                        <p>{estatisticas.indeferidas}</p>
+                    </div>
                 </div>
             </section>
 
-            <div className="toolbar">
-                <div className="search-bar">
+            <div className="sigum-home-toolbar">
+                <div className="sigum-home-search-bar">
                     <i className="fas fa-search"></i>
                     <input
                         type="text"
@@ -88,60 +118,49 @@ export default function Home() {
                         onChange={(e) => setTermoBusca(e.target.value)}
                     />
                 </div>
-                <button
-                    className="btn-nova-consulta"
-                    onClick={() => navigate('/zoneamento')}
-                >
-                    <i className="fas fa-plus"></i> Gerenciar Zoneamento
-                </button>
-
-                <button
-                    className="btn-nova-consulta" 
-                    style={{ backgroundColor: 'var(--cor-sucesso)' }}
-                    onClick={() => navigate('/cnaes')}
-                >
-                    <i className="fas fa-briefcase"></i> Gerenciar CNAES
-                </button>
+                {userRole === 'ADMIN' && (
+                    <div className="sigum-home-admin-actions">
+                        <button className="sigum-home-action-button" onClick={() => navigate('/zoneamento')}>
+                            <i className="fas fa-map-marked-alt"></i> Gerenciar Zoneamento
+                        </button>
+                        <button className="sigum-home-action-button" onClick={() => navigate('/cnaes')}>
+                            <i className="fas fa-briefcase"></i> Gerenciar CNAEs
+                        </button>
+                    </div>
+                )}
             </div>
 
-            <main className="consultas-grid">
-                {loading && <p>Carregando consultas...</p>}
-                {error && <p className="error-message">{error}</p>}
+            <main className="sigum-home-consultas-grid">
+                {loading && <p className="sigum-home-loading-message">Carregando consultas...</p>}
+                {error && <p className="sigum-home-error-message">{error}</p>}
                 {!loading && !error && consultasFiltradas.map((consulta) => (
-                    <div key={consulta.id} className="consulta-card">
-                        <div className="card-header">
-                            <span className="protocolo">Protocolo: {consulta.co_protocolo_redesim}</span>
-                            <span className={`status-tag ${consulta.situacao === 'DEFERIDO' ? 'deferido' : 'indeferido'}`}>
+                    <div key={consulta.id} className="sigum-home-consulta-card">
+                        <div className="sigum-home-card-header">
+                            <span className="sigum-home-protocolo">Protocolo: {consulta.co_protocolo_redesim}</span>
+                            <span className={`sigum-home-status-tag ${consulta.situacao.toLowerCase()}`}>
                                 {consulta.situacao}
                             </span>
                         </div>
-                        <div className="card-body">
+                        <div className="sigum-home-card-body">
                             <h4>{consulta.nome_solicitante}</h4>
-                            <div className="info-item">
-                                <i className="fas fa-user-tie"></i>
-                                <span>Solicitante: {consulta.nome_solicitante}</span>
-                            </div>
-                            <div className="info-item">
+                            <div className="sigum-home-info-item">
                                 <i className="fas fa-map-marker-alt"></i>
-                                <span>Endereço: {consulta.endereco}</span>
+                                <span>{consulta.endereco}</span>
                             </div>
-                            <div className="info-item">
+                            <div className="sigum-home-info-item">
                                 <i className="fas fa-briefcase"></i>
-                                <span>CNAEs: {consulta.cnaes.join(', ')}</span>
-                            </div>
-                            <div className="info-item situacao-destaque">
-                                <i className="fas fa-info-circle"></i>
-                                <span>Situação: {consulta.situacao}</span>
+                                <span>{consulta.cnaes.join(', ')}</span>
                             </div>
                         </div>
-                        <div className="card-footer">
-                            <span className="data">Recebido em: {formatarData(consulta.dt_solicitacao)}</span>
-                            <button className="btn-detalhes"
-                                onClick={() => navigate(`/detalhes/${consulta.id}`)}>Ver Detalhes</button>
+                        <div className="sigum-home-card-footer">
+                            <span className="sigum-home-data"><i className="far fa-calendar-alt"></i> {formatarData(consulta.dt_solicitacao)}</span>
+                            <button className="sigum-home-btn-detalhes" onClick={() => navigate(`/detalhes/${consulta.id}`)}>
+                                Ver Detalhes <i className="fas fa-arrow-right"></i>
+                            </button>
                         </div>
                     </div>
                 ))}
-                {!loading && consultasFiltradas.length === 0 && <p>Nenhuma consulta encontrada para os filtros aplicados.</p>}
+                {!loading && consultasFiltradas.length === 0 && <p className="sigum-home-no-results">Nenhuma consulta encontrada para os filtros aplicados.</p>}
             </main>
         </div>
     );

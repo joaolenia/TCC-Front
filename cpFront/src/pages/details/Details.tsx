@@ -4,7 +4,6 @@ import {
   type ConsultaPreviaDetalhe,
   fetchConsultaPreviaById,
 } from '../../services/cpv';
-
 import { generateReport } from './Retatorio';
 import './Details.css';
 
@@ -36,6 +35,15 @@ export default function DetalhesConsulta() {
   const [consulta, setConsulta] = useState<ConsultaPreviaDetalhe | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [userLogin, SetuserLogin] = useState('');
+
+  useEffect(() => {
+    const user = localStorage.getItem('user');
+    if (user) {
+      SetuserLogin(JSON.parse(user).email);
+    }
+  }, []);
+
 
   useEffect(() => {
     if (!id) {
@@ -80,13 +88,12 @@ export default function DetalhesConsulta() {
       <header className="top-header">
         <h1>Detalhes da Consulta</h1>
         <div className="user-profile">
-          <span>Servidor Municipal</span>
-          <img src="https://i.pravatar.cc/150?img=12" alt="Foto do servidor" />
+          <span>{userLogin}</span>
         </div>
       </header>
 
       <nav className="nav-actions">
-        <a href="/" className="btn-voltar">
+        <a href="/home" className="btn-voltar">
           <i className="fas fa-arrow-left"></i> Voltar ao Painel
         </a>
         <div className="action-buttons">
@@ -141,7 +148,6 @@ export default function DetalhesConsulta() {
           </div>
         </section>
 
-        {/* Card: Dados do Solicitante (Contador) */}
         <section className="info-card">
           <h3>
             <i className="fas fa-user-tie"></i> Dados do Solicitante
@@ -288,7 +294,7 @@ export default function DetalhesConsulta() {
               <span className="item-value long-text">{consulta.zoneamento?.descricao || 'N/A'}</span>
             </div>
           </div>
-          <div className="justificativa-final">
+          <div className={`justificativa-final ${consulta.situacao === 'INDEFERIDO' ? 'indeferido' : ''}`}>
             <h4>Resultado Final: {consulta.situacao}</h4>
             <p>
               {consulta.observacoes || 'Nenhuma observação adicional foi registrada.'}

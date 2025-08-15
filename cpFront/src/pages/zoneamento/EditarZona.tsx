@@ -1,12 +1,10 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, type ChangeEvent } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import {
-  fetchZoneamentoById,
-  updateZoneamento,
-  deleteZoneamento,
-} from '../../services/zoneamento';
+import { fetchZoneamentoById, updateZoneamento, deleteZoneamento } from '../../services/zoneamento';
 import { fetchCnaes } from '../../services/cnaes';
 import './NovaZona.css';
+import JSZip from 'jszip';
+import { kml } from '@tmcw/togeojson';
 
 type Cnae = {
   id: number;
@@ -14,53 +12,22 @@ type Cnae = {
   descricao: string;
 };
 
-const converterGeoJsonParaTexto = (area: any): string => {
-  if (!area || !area.features || !area.features[0]?.geometry?.coordinates) {
-    return '';
-  }
-  try {
-    const coordenadas = area.features[0].geometry.coordinates[0];
-    return coordenadas.map((ponto: number[]) => `[${ponto.join(', ')}],`).join('\n');
-  } catch {
-    return '';
-  }
+// Tipagem para GeoJSON
+type GeoJsonGeometry = {
+  type: string;
+  coordinates: any[];
 };
 
-const converterTextoParaGeoJson = (texto: string): object | null => {
-    if (!texto.trim()) {
-      return null;
-    }
-    const linhas = texto.trim().split('\n').filter(linha => linha.trim() !== '');
-    const coordenadas = linhas.map(linha => {
-      const limpo = linha.replace(/[\[\]]/g, '');
-      const partes = limpo.split(',').map(num => parseFloat(num.trim()));
-      return partes.filter(num => !isNaN(num));
-    }).filter(coord => coord.length >= 2);
-  
-    if (coordenadas.length < 3) {
-      throw new Error("São necessárias pelo menos 3 coordenadas para formar um polígono válido.");
-    }
-  
-    const primeiroPonto = coordenadas[0];
-    const ultimoPonto = coordenadas[coordenadas.length - 1];
-    if (primeiroPonto[0] !== ultimoPonto[0] || primeiroPonto[1] !== ultimoPonto[1]) {
-      coordenadas.push(primeiroPonto);
-    }
-  
-    return {
-      type: 'FeatureCollection',
-      features: [
-        {
-          type: 'Feature',
-          geometry: {
-            type: 'Polygon',
-            coordinates: [coordenadas],
-          },
-          properties: {},
-        },
-      ],
-    };
-  };
+type GeoJsonFeature = {
+  type: 'Feature';
+  geometry: GeoJsonGeometry;
+  properties: Record<string, any>;
+};
+
+type GeoJsonFeatureCollection = {
+  type: 'FeatureCollection';
+  features: GeoJsonFeature[];
+};
 
 export default function EditarZona() {
   const { id } = useParams<{ id: string }>();
@@ -68,12 +35,16 @@ export default function EditarZona() {
 
   const [nome, setNome] = useState('');
   const [descricao, setDescricao] = useState('');
-  const [coordenadasTexto, setCoordenadasTexto] = useState('');
   const [cnaesDisponiveis, setCnaesDisponiveis] = useState<Cnae[]>([]);
   const [cnaesSelecionados, setCnaesSelecionados] = useState<number[]>([]);
   const [termoBusca, setTermoBusca] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [formLoading, setFormLoading] = useState(false);
+
+  const [geoJsonArea, setGeoJsonArea] = useState<GeoJsonFeatureCollection | GeoJsonGeometry | null>(null);
+  const [geoJsonOriginal, setGeoJsonOriginal] = useState<GeoJsonFeatureCollection | GeoJsonGeometry | null>(null);
+  const [fileName, setFileName] = useState<string>('');
 
   useEffect(() => {
     const zoneId = Number(id);
@@ -83,146 +54,184 @@ export default function EditarZona() {
       return;
     }
 
-    Promise.all([
-      fetchZoneamentoById(zoneId),
-      fetchCnaes()
-    ]).then(([zonaData, cnaesData]) => {
-      setNome(zonaData.nome);
-      setDescricao(zonaData.descricao);
-      setCnaesSelecionados(zonaData.cnaesPermitidos.map(cnae => cnae.id));
-      setCnaesDisponiveis(cnaesData);
-      setCoordenadasTexto(converterGeoJsonParaTexto(zonaData.area));
-    }).catch(() => {
-      setError('Falha ao carregar os dados da zona ou a lista de CNAEs.');
-    }).finally(() => {
-      setLoading(false);
-    });
+    Promise.all([fetchZoneamentoById(zoneId), fetchCnaes()])
+      .then(([zonaData, cnaesData]) => {
+        setNome(zonaData.nome);
+        setDescricao(zonaData.descricao);
+        setCnaesSelecionados(zonaData.cnaesPermitidos.map(cnae => cnae.id));
+        setCnaesDisponiveis(cnaesData);
+
+        if (zonaData.area) {
+          setGeoJsonArea(zonaData.area);
+          setGeoJsonOriginal(zonaData.area);
+          setFileName('Área existente. Envie um novo arquivo para substituir.');
+        }
+      })
+      .catch(() => setError('Falha ao carregar os dados da zona ou a lista de CNAEs.'))
+      .finally(() => setLoading(false));
   }, [id]);
 
   const handleCnaeChange = (cnaeId: number) => {
     setCnaesSelecionados(prev =>
-      prev.includes(cnaeId)
-        ? prev.filter(id => id !== cnaeId)
-        : [...prev, cnaeId]
+      prev.includes(cnaeId) ? prev.filter(id => id !== cnaeId) : [...prev, cnaeId]
     );
   };
 
   const cnaesFiltrados = useMemo(() => {
     if (!termoBusca) return cnaesDisponiveis;
     return cnaesDisponiveis.filter(cnae =>
-      cnae.codigo.includes(termoBusca) ||
+      cnae.codigo.toLowerCase().includes(termoBusca.toLowerCase()) ||
       cnae.descricao.toLowerCase().includes(termoBusca.toLowerCase())
     );
   }, [termoBusca, cnaesDisponiveis]);
 
-  const handleUpdate = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!nome || cnaesSelecionados.length === 0) {
-      setError('O nome da zona e a seleção de ao menos um CNAE são obrigatórios.');
-      return;
-    }
-    setLoading(true);
+  const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setFileName(file.name);
     setError(null);
     try {
-      const zoneId = Number(id);
-      const area = converterTextoParaGeoJson(coordenadasTexto);
-      
-      await updateZoneamento(zoneId, {
+      const zip = await JSZip.loadAsync(file);
+      const kmlFile = Object.values(zip.files).find(f => f.name.toLowerCase().endsWith('.kml'));
+      if (!kmlFile) throw new Error('Nenhum arquivo .kml foi encontrado no .kmz.');
+      const kmlText = await kmlFile.async('text');
+      const kmlDom = new DOMParser().parseFromString(kmlText, 'text/xml');
+      const geoJson = kml(kmlDom);
+
+      if (!geoJson.features || geoJson.features.length === 0) 
+        throw new Error('O arquivo KML não contém dados geográficos válidos.');
+
+      setGeoJsonArea(geoJson as GeoJsonFeatureCollection);
+    } catch (err: any) {
+      setError(`Erro ao processar o arquivo: ${err.message}`);
+      setGeoJsonArea(null);
+      setFileName('');
+    }
+  };
+
+  const handleUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    let areaParaSalvar: GeoJsonFeatureCollection;
+
+    if (geoJsonArea || geoJsonOriginal) {
+      const geo = geoJsonArea || geoJsonOriginal;
+      // Se for geometria simples, transforma em FeatureCollection
+      if ((geo as GeoJsonFeatureCollection).type === 'FeatureCollection') {
+        areaParaSalvar = geo as GeoJsonFeatureCollection;
+      } else {
+        areaParaSalvar = {
+          type: 'FeatureCollection',
+          features: [{ type: 'Feature', geometry: geo as GeoJsonGeometry, properties: {} }]
+        };
+      }
+    } else {
+      setError('O nome da zona, um CNAE e uma área geográfica são obrigatórios.');
+      return;
+    }
+
+    if (!nome || cnaesSelecionados.length === 0) {
+      setError('O nome da zona e pelo menos um CNAE são obrigatórios.');
+      return;
+    }
+
+    setFormLoading(true);
+    setError(null);
+
+    try {
+      await updateZoneamento(Number(id), {
         nome,
         descricao,
         cnaesPermitidosIds: cnaesSelecionados,
-        area: area,
+        area: areaParaSalvar,
       });
       navigate('/zoneamento');
     } catch (err: any) {
-      setError(err.message || 'Erro ao atualizar a zona. Verifique os dados e tente novamente.');
+      setError(err.message || 'Erro ao atualizar a zona.');
     } finally {
-      setLoading(false);
+      setFormLoading(false);
     }
   };
 
   const handleDelete = async () => {
     if (window.confirm(`Tem certeza que deseja excluir a zona "${nome}"? Esta ação não pode ser desfeita.`)) {
-      setLoading(true);
+      setFormLoading(true);
       setError(null);
       try {
-        const zoneId = Number(id);
-        await deleteZoneamento(zoneId);
+        await deleteZoneamento(Number(id));
         navigate('/zoneamento');
-      } catch (err) {
-        setError('Erro ao excluir a zona. Tente novamente.');
+      } catch {
+        setError('Erro ao excluir a zona.');
       } finally {
-        setLoading(false);
+        setFormLoading(false);
       }
     }
   };
-  
-  if (loading) return <div className="container">Carregando dados da zona...</div>;
+
+  if (loading) return <div className="sigum-zona-form-container"><p>Carregando dados da zona...</p></div>;
 
   return (
-    <div className="container">
-      <header className="top-header">
-        <h1>
-          <i className="fas fa-edit" style={{ color: 'var(--cor-primaria)' }}></i>{' '}
-          Editar Zona
-        </h1>
-      </header>
-      <nav className="nav-actions">
-        <button onClick={() => navigate('/zoneamento')} className="btn-voltar">
+    <div className="sigum-zona-form-container">
+      <header className="sigum-zona-form-header">
+        <h1><i className="fas fa-edit"></i> Editar Zona</h1>
+        <button onClick={() => navigate('/zoneamento')} className="sigum-zona-form-btn-voltar">
           <i className="fas fa-arrow-left"></i> Voltar à Lista
         </button>
-      </nav>
-      <main className="form-container">
-        <form onSubmit={handleUpdate} className="zona-form">
-          <div className="form-card">
+      </header>
+
+      <main className="sigum-zona-form-main">
+        <form onSubmit={handleUpdate} className="sigum-zona-form-body">
+          <div className="sigum-zona-form-card">
             <h3><i className="fas fa-map-marked-alt"></i> Detalhes da Zona</h3>
-            <div className="input-group">
+            <div className="sigum-zona-form-input-group">
               <label htmlFor="nome">Nome da Zona</label>
               <input id="nome" type="text" value={nome} onChange={(e) => setNome(e.target.value)} required />
             </div>
-            <div className="input-group">
+            <div className="sigum-zona-form-input-group">
               <label htmlFor="descricao">Descrição</label>
-              <textarea id="descricao" value={descricao} onChange={(e) => setDescricao(e.target.value)} rows={4} />
+              <textarea id="descricao" value={descricao} onChange={(e) => setDescricao(e.target.value)} rows={4}></textarea>
             </div>
-            <div className="input-group">
-                <label htmlFor="coordenadas">Coordenadas do Polígono</label>
-                <textarea
-                    id="coordenadas"
-                    value={coordenadasTexto}
-                    onChange={(e) => setCoordenadasTexto(e.target.value)}
-                    placeholder="Cole as coordenadas aqui, uma por linha. Ex: [-51.35, -26.01, 0],"
-                    rows={10}
-                    style={{ fontFamily: 'monospace', lineHeight: '1.5' }}
-                />
+            <div className="sigum-zona-form-input-group">
+              <label htmlFor="kmz-upload">Área Geográfica (KMZ)</label>
+              <div className="sigum-zona-form-file-upload-wrapper">
+                <input type="file" id="kmz-upload" accept=".kmz" onChange={handleFileChange} />
+                <label htmlFor="kmz-upload" className="sigum-zona-form-file-upload-label">
+                  <i className={`fas ${(geoJsonArea || geoJsonOriginal) ? 'fa-check-circle' : 'fa-upload'}`}></i>
+                  <span>{fileName || 'Escolher arquivo KMZ'}</span>
+                </label>
+              </div>
             </div>
           </div>
 
-          <div className="form-card">
+          <div className="sigum-zona-form-card">
             <h3><i className="fas fa-tasks"></i> Atividades Permitidas (CNAE)</h3>
-            <div className="cnae-search-bar">
+            <div className="sigum-zona-form-cnae-search-bar">
               <i className="fas fa-search"></i>
               <input type="text" placeholder="Buscar por código ou descrição..." value={termoBusca} onChange={(e) => setTermoBusca(e.target.value)} />
             </div>
-            <div className="cnae-list">
+            <div className="sigum-zona-form-cnae-list">
               {cnaesFiltrados.map(cnae => (
-                <div key={cnae.id} className="cnae-item">
+                <div key={cnae.id} className="sigum-zona-form-cnae-item">
                   <input type="checkbox" id={`cnae-${cnae.id}`} checked={cnaesSelecionados.includes(cnae.id)} onChange={() => handleCnaeChange(cnae.id)} />
-                  <label htmlFor={`cnae-${cnae.id}`} title={cnae.descricao}>{cnae.codigo} - {cnae.descricao}</label>
+                  <label htmlFor={`cnae-${cnae.id}`} title={cnae.descricao}>
+                    <strong>{cnae.codigo}</strong> - {cnae.descricao}
+                  </label>
                 </div>
               ))}
             </div>
           </div>
-          
-          {error && <p className="error-message">{error}</p>}
 
-          <div className="form-actions-edit">
-            <button type="button" onClick={handleDelete} className="btn-excluir" disabled={loading}>
+          {error && <p className="sigum-zona-form-error-message">{error}</p>}
+
+          <div className="sigum-zona-form-actions-edit">
+            <button type="button" onClick={handleDelete} className="sigum-zona-form-btn-excluir" disabled={formLoading}>
               <i className="fas fa-trash-alt"></i> Excluir Zona
             </button>
-            <div>
-              <button type="button" onClick={() => navigate('/zoneamento')} className="btn-cancelar">Cancelar</button>
-              <button type="submit" className="btn-salvar" disabled={loading}>
-                {loading ? 'Salvando...' : <><i className="fas fa-save"></i> Salvar Alterações</>}
+            <div className="sigum-zona-form-actions-right">
+              <button type="button" onClick={() => navigate('/zoneamento')} className="sigum-zona-form-btn-cancelar">Cancelar</button>
+              <button type="submit" className="sigum-zona-form-btn-salvar" disabled={formLoading}>
+                {formLoading ? <span className="sigum-zona-form-spinner"></span> : <><i className="fas fa-save"></i> Salvar Alterações</>}
               </button>
             </div>
           </div>

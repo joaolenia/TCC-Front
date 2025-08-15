@@ -1,15 +1,15 @@
 import { PDFDocument, rgb, StandardFonts, PDFFont, PageSizes, type Color } from 'pdf-lib';
 import { type ConsultaPreviaDetalhe } from '../../services/cpv';
 
-// --- Constantes de Layout e Estilo ---
+
 const COLORS = {
-  PRIMARY: rgb(0.12, 0.38, 0.53), // Azul Corporativo
-  SECONDARY: rgb(0.2, 0.2, 0.2),   // Cinza Escuro para texto
+  PRIMARY: rgb(0.12, 0.38, 0.53),
+  SECONDARY: rgb(0.2, 0.2, 0.2),
   LIGHT_GRAY: rgb(0.85, 0.85, 0.85),
   WHITE: rgb(1, 1, 1),
-  SUCCESS: rgb(0.15, 0.68, 0.38), // Verde para Deferido
-  ERROR: rgb(0.75, 0.22, 0.17),    // Vermelho para Indeferido
-  WARNING: rgb(1, 0.76, 0.03),     // Amarelo para outros status
+  SUCCESS: rgb(0.15, 0.68, 0.38),
+  ERROR: rgb(0.75, 0.22, 0.17),
+  WARNING: rgb(1, 0.76, 0.03),
 };
 
 const MARGINS = {
@@ -29,7 +29,7 @@ const FONT_SIZES = {
 class ReportGenerator {
   private pdfDoc!: PDFDocument;
   private consulta: ConsultaPreviaDetalhe;
-  private page!: any; // Usando 'any' para simplificar, pois Page será recriada
+  private page!: any;
   private y!: number;
   private fonts!: { regular: PDFFont; bold: PDFFont };
   private pageHeight!: number;
@@ -53,7 +53,7 @@ class ReportGenerator {
     };
     this.addNewPage();
   }
-  
+
   private addNewPage() {
     this.page = this.pdfDoc.addPage(PageSizes.A4);
     this.pageHeight = this.page.getSize().height;
@@ -63,53 +63,52 @@ class ReportGenerator {
 
   private async drawHeader() {
     try {
-        // Exemplo de logo: usando um placeholder. Troque a URL pela imagem da sua prefeitura.
-        const logoUrl = 'https://i.imgur.com/J2gU333.png'; // Placeholder de brasão
-        const logoBytes = await fetch(logoUrl).then(res => res.arrayBuffer());
-        const logoImage = await this.pdfDoc.embedPng(logoBytes);
-        const logoDims = logoImage.scale(0.08);
+      const logoUrl = 'https://i.imgur.com/J2gU333.png';
+      const logoBytes = await fetch(logoUrl).then(res => res.arrayBuffer());
+      const logoImage = await this.pdfDoc.embedPng(logoBytes);
+      const logoDims = logoImage.scale(0.08);
 
-        this.page.drawImage(logoImage, {
-            x: MARGINS.LEFT,
-            y: this.pageHeight - MARGINS.TOP + 10,
-            width: logoDims.width,
-            height: logoDims.height,
-        });
+      this.page.drawImage(logoImage, {
+        x: MARGINS.LEFT,
+        y: this.pageHeight - MARGINS.TOP + 10,
+        width: logoDims.width,
+        height: logoDims.height,
+      });
     } catch (e) {
-        console.error("Não foi possível carregar o logo:", e);
+      console.error("Não foi possível carregar o logo:", e);
     }
-    
+
     this.page.drawText('PREFEITURA MUNICIPAL DE CRUZ MACHADO', {
-        x: MARGINS.LEFT + 60,
-        y: this.pageHeight - MARGINS.TOP + 5,
-        font: this.fonts.bold,
-        size: 12,
-        color: COLORS.SECONDARY,
+      x: MARGINS.LEFT + 60,
+      y: this.pageHeight - MARGINS.TOP + 5,
+      font: this.fonts.bold,
+      size: 12,
+      color: COLORS.SECONDARY,
     });
   }
 
   private async drawFooter() {
     const pages = this.pdfDoc.getPages();
     for (let i = 0; i < pages.length; i++) {
-        const page = pages[i];
-        const pageNumberText = `Página ${i + 1} de ${pages.length}`;
-        const genDateText = `Gerado em: ${new Date().toLocaleString('pt-BR')}`;
+      const page = pages[i];
+      const pageNumberText = `Página ${i + 1} de ${pages.length}`;
+      const genDateText = `Gerado em: ${new Date().toLocaleString('pt-BR')}`;
 
-        page.drawText(genDateText, {
-            x: MARGINS.LEFT,
-            y: MARGINS.BOTTOM - 20,
-            font: this.fonts.regular,
-            size: 8,
-            color: COLORS.LIGHT_GRAY,
-        });
+      page.drawText(genDateText, {
+        x: MARGINS.LEFT,
+        y: MARGINS.BOTTOM - 20,
+        font: this.fonts.regular,
+        size: 8,
+        color: COLORS.LIGHT_GRAY,
+      });
 
-        page.drawText(pageNumberText, {
-            x: page.getWidth() - MARGINS.RIGHT - this.fonts.regular.widthOfTextAtSize(pageNumberText, 8),
-            y: MARGINS.BOTTOM - 20,
-            font: this.fonts.regular,
-            size: 8,
-            color: COLORS.LIGHT_GRAY,
-        });
+      page.drawText(pageNumberText, {
+        x: page.getWidth() - MARGINS.RIGHT - this.fonts.regular.widthOfTextAtSize(pageNumberText, 8),
+        y: MARGINS.BOTTOM - 20,
+        font: this.fonts.regular,
+        size: 8,
+        color: COLORS.LIGHT_GRAY,
+      });
     }
   }
 
@@ -138,31 +137,31 @@ class ReportGenerator {
     });
     this.y -= 20;
   }
-  
+
   private drawField(label: string, value: string | null | undefined, options?: { valueColor?: Color }) {
     this.checkAndAddNewPage(15);
     const cleanValue = value || 'Não informado';
-    
+
     this.page.drawText(`${label}:`, {
-        x: MARGINS.LEFT,
-        y: this.y,
-        font: this.fonts.bold,
-        size: FONT_SIZES.LABEL,
-        color: COLORS.SECONDARY,
+      x: MARGINS.LEFT,
+      y: this.y,
+      font: this.fonts.bold,
+      size: FONT_SIZES.LABEL,
+      color: COLORS.SECONDARY,
     });
-    
+
     this.page.drawText(cleanValue, {
-        x: MARGINS.LEFT + 140,
-        y: this.y,
-        font: this.fonts.regular,
-        size: FONT_SIZES.BODY,
-        color: options?.valueColor || COLORS.SECONDARY,
+      x: MARGINS.LEFT + 140,
+      y: this.y,
+      font: this.fonts.regular,
+      size: FONT_SIZES.BODY,
+      color: options?.valueColor || COLORS.SECONDARY,
     });
     this.y -= 18;
   }
 
   private drawWrappedText(label: string, text: string) {
-    const maxWidth = this.page.getWidth() - MARGINS.LEFT - MARGINS.RIGHT - 140; // Largura para o valor
+    const maxWidth = this.page.getWidth() - MARGINS.LEFT - MARGINS.RIGHT - 140;
     const lines = this.splitTextIntoLines(text, maxWidth, this.fonts.regular, FONT_SIZES.BODY);
 
     this.checkAndAddNewPage(lines.length * 15);
@@ -199,42 +198,40 @@ class ReportGenerator {
   }
 
   private drawStatusBadge() {
-      const status = this.consulta.situacao.toUpperCase();
-      let color = COLORS.WARNING;
-      if (status === 'DEFERIDO') color = COLORS.SUCCESS;
-      if (status === 'INDEFERIDO') color = COLORS.ERROR;
+    const status = this.consulta.situacao.toUpperCase();
+    let color = COLORS.WARNING;
+    if (status === 'DEFERIDO') color = COLORS.SUCCESS;
+    if (status === 'INDEFERIDO') color = COLORS.ERROR;
 
-      const textWidth = this.fonts.bold.widthOfTextAtSize(status, FONT_SIZES.BODY);
-      this.page.drawRectangle({
-          x: this.page.getWidth() - MARGINS.RIGHT - textWidth - 20,
-          y: this.y + 15,
-          width: textWidth + 20,
-          height: 20,
-          color: color,
-          borderRadius: 5,
-      });
-      this.page.drawText(status, {
-          x: this.page.getWidth() - MARGINS.RIGHT - textWidth - 10,
-          y: this.y + 21,
-          font: this.fonts.bold,
-          size: FONT_SIZES.BODY,
-          color: COLORS.WHITE,
-      });
+    const textWidth = this.fonts.bold.widthOfTextAtSize(status, FONT_SIZES.BODY);
+    this.page.drawRectangle({
+      x: this.page.getWidth() - MARGINS.RIGHT - textWidth - 20,
+      y: this.y + 15,
+      width: textWidth + 20,
+      height: 20,
+      color: color,
+      borderRadius: 5,
+    });
+    this.page.drawText(status, {
+      x: this.page.getWidth() - MARGINS.RIGHT - textWidth - 10,
+      y: this.y + 21,
+      font: this.fonts.bold,
+      size: FONT_SIZES.BODY,
+      color: COLORS.WHITE,
+    });
   }
 
   private async drawContent() {
-    // Título Principal
-    this.y -= 30; // Espaço extra após o cabeçalho
+    this.y -= 30;
     this.page.drawText('Relatório de Consulta Prévia de Viabilidade', {
-        x: MARGINS.LEFT,
-        y: this.y,
-        font: this.fonts.bold,
-        size: FONT_SIZES.TITLE,
-        color: COLORS.SECONDARY,
+      x: MARGINS.LEFT,
+      y: this.y,
+      font: this.fonts.bold,
+      size: FONT_SIZES.TITLE,
+      color: COLORS.SECONDARY,
     });
     this.drawStatusBadge();
 
-    // Seção 1
     this.drawSectionTitle('Dados da Solicitação e Empresa');
     this.drawField('Protocolo REDESIM', this.consulta.co_protocolo_redesim);
     this.drawField('CNPJ', this.consulta.nu_cnpj);
@@ -242,21 +239,18 @@ class ReportGenerator {
     this.drawField('Natureza Jurídica', this.consulta.co_natureza_juridica);
     this.drawWrappedText('Objeto Social', this.consulta.ds_objeto_social || '');
 
-    // Seção 2
     this.drawSectionTitle('Endereço da Atividade');
     this.drawField('Endereço', `${this.consulta.endereco.ds_tipo_logradouro} ${this.consulta.endereco.ds_endereco}, ${this.consulta.endereco.nu_numero}`);
     this.drawField('Bairro', this.consulta.endereco.ds_bairro);
     this.drawField('CEP', this.consulta.endereco.co_cep);
     this.drawField('Inscrição Imobiliária', this.consulta.endereco.natureza_imovel.nu_inscricao);
     this.drawField('Área Utilizada', `${this.consulta.endereco.nu_area_utilizada} m²`);
-    
-    // Seção 3
+
     this.drawSectionTitle('Quadro Societário');
     this.consulta.socios.forEach(socio => {
-        this.drawField(socio.ds_nome, `CPF/CNPJ: ${socio.nu_cpf_cnpj}`);
+      this.drawField(socio.ds_nome, `CPF/CNPJ: ${socio.nu_cpf_cnpj}`);
     });
 
-    // Seção 4
     this.drawSectionTitle('Análise e Resultado');
     this.drawField('Classificação de Risco', this.consulta.classificacao_risco.ds_tipo_risco);
     this.drawField('Zoneamento', this.consulta.zoneamento?.nome);
@@ -264,18 +258,16 @@ class ReportGenerator {
   }
 }
 
-
-// --- Função de Exportação ---
-// Esta função será chamada pelo seu componente React
 export async function generateReport(consulta: ConsultaPreviaDetalhe) {
-    const reportGenerator = new ReportGenerator(consulta);
-    const pdfBytes = await reportGenerator.generate();
+  const reportGenerator = new ReportGenerator(consulta);
+  const pdfBytes = await reportGenerator.generate();
 
-    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `consulta-previa-${consulta.co_protocolo_redesim}.pdf`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const arrayBuffer = new Uint8Array(pdfBytes).buffer;
+  const blob = new Blob([arrayBuffer], { type: 'application/pdf' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = `consulta-previa-${consulta.co_protocolo_redesim}.pdf`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 }

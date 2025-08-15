@@ -1,266 +1,335 @@
-   /* Importação da fonte do Google Fonts */
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css');
 
-        /* Reset e Configurações Globais */
-        :root {
-            --cor-primaria: #0056b3; /* Azul escuro */
-            --cor-secundaria: #f8f9fa; /* Fundo cinza claro */
-            --cor-texto: #495057;
-            --cor-titulo: #343a40;
-            --cor-sucesso: #28a745;
-            --cor-erro: #dc3545;
-            --cor-aviso: #ffc107;
-            --cor-borda: #dee2e6;
-            --sombra-card: 0 4px 12px rgba(0, 0, 0, 0.08);
-        }
+:root {
+  --sigum-home-cor-primaria: #0056b3;
+  --sigum-home-cor-secundaria: #f8f9fa;
+  --sigum-home-cor-fundo: #f0f2f5;
+  --sigum-home-cor-branco: #ffffff;
+  --sigum-home-cor-texto-escuro: #212529;
+  --sigum-home-cor-texto-claro: #6c757d;
+  --sigum-home-cor-sucesso: #28a745;
+  --sigum-home-cor-erro: #dc3545;
+  --sigum-home-cor-borda: #dee2e6;
+  --sigum-home-sombra-card: 0 8px 25px rgba(0, 40, 100, 0.05);
+}
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+.sigum-home-page-container {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 2.5rem;
+  background-color: var(--sigum-home-cor-fundo);
+}
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--cor-secundaria);
-            color: var(--cor-texto);
-            line-height: 1.6;
-        }
+.sigum-home-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.5rem;
+}
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
+.sigum-home-header-title h1 {
+  font-size: 2.2rem;
+  color: var(--sigum-home-cor-texto-escuro);
+  font-weight: 700;
+}
 
-        /* Cabeçalho */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            padding-bottom: 1.5rem;
-            border-bottom: 1px solid var(--cor-borda);
-        }
+.sigum-home-header-title p {
+  color: var(--sigum-home-cor-texto-claro);
+  font-size: 1rem;
+}
 
-        .header h1 {
-            font-size: 2rem;
-            color: var(--cor-titulo);
-            font-weight: 600;
-        }
+.sigum-home-user-profile {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
 
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
+.sigum-home-user-info {
+  text-align: right;
+}
 
-        .user-profile span {
-            font-weight: 500;
-        }
+.sigum-home-user-name {
+  display: block;
+  font-weight: 600;
+  color: var(--sigum-home-cor-texto-escuro);
+}
 
-        .user-profile img {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--cor-primaria);
-        }
+.sigum-home-user-role {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--sigum-home-cor-texto-claro);
+  text-transform: capitalize;
+}
 
-        /* Painel de Estatísticas */
-        .stats-panel {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2.5rem;
-        }
+.sigum-home-logout-button {
+  background: var(--sigum-home-cor-secundaria);
+  border: 1px solid var(--sigum-home-cor-borda);
+  color: var(--sigum-home-cor-texto-claro);
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+}
 
-        .stat-card {
-            background-color: #fff;
-            padding: 1.5rem;
-            border-radius: 12px;
-            box-shadow: var(--sombra-card);
-            border-left: 5px solid;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
+.sigum-home-logout-button:hover {
+  background-color: var(--sigum-home-cor-primaria);
+  color: var(--sigum-home-cor-branco);
+  border-color: var(--sigum-home-cor-primaria);
+}
 
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-        }
+.sigum-home-stats-panel {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
 
-        .stat-card h3 {
-            font-size: 1rem;
-            color: #6c757d;
-            margin-bottom: 0.5rem;
-        }
+.sigum-home-stat-card {
+  background-color: var(--sigum-home-cor-branco);
+  padding: 1.8rem;
+  border-radius: 16px;
+  box-shadow: var(--sigum-home-sombra-card);
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  border-left: 6px solid transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
 
-        .stat-card p {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: var(--cor-titulo);
-        }
+.sigum-home-stat-card:hover, .sigum-home-stat-card.active {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0, 40, 100, 0.1);
+}
 
-        .stat-card.total { border-color: var(--cor-primaria); }
-        .stat-card.aprovadas { border-color: var(--cor-sucesso); }
-        .stat-card.rejeitadas { border-color: var(--cor-erro); }
-        .stat-card.em-analise { border-color: var(--cor-aviso); }
+.sigum-home-stat-card.total { border-color: var(--sigum-home-cor-primaria); }
+.sigum-home-stat-card.total.active { background-color: #e6f0ff; }
+.sigum-home-stat-card.aprovadas { border-color: var(--sigum-home-cor-sucesso); }
+.sigum-home-stat-card.aprovadas.active { background-color: #eaf7ed; }
+.sigum-home-stat-card.rejeitadas { border-color: var(--sigum-home-cor-erro); }
+.sigum-home-stat-card.rejeitadas.active { background-color: #fbeae8; }
 
-        /* Ferramentas e Filtros */
-        .toolbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
+.sigum-home-stat-icon {
+  font-size: 2.5rem;
+  padding: 1rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--sigum-home-cor-branco);
+}
 
-        .search-bar {
-            flex-grow: 1;
-            position: relative;
-        }
+.sigum-home-stat-card.total .sigum-home-stat-icon { background-color: var(--sigum-home-cor-primaria); }
+.sigum-home-stat-card.aprovadas .sigum-home-stat-icon { background-color: var(--sigum-home-cor-sucesso); }
+.sigum-home-stat-card.rejeitadas .sigum-home-stat-icon { background-color: var(--sigum-home-cor-erro); }
 
-        .search-bar input {
-            width: 100%;
-            padding: 0.8rem 1rem 0.8rem 2.5rem;
-            border-radius: 8px;
-            border: 1px solid var(--cor-borda);
-            font-size: 1rem;
-        }
+.sigum-home-stat-info h3 {
+  font-size: 1rem;
+  color: var(--sigum-home-cor-texto-claro);
+  margin-bottom: 0.2rem;
+  font-weight: 500;
+}
 
-        .search-bar i {
-            position: absolute;
-            left: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #adb5bd;
-        }
-        
-        .btn-nova-consulta {
-            background-color: var(--cor-primaria);
-            color: #fff;
-            padding: 0.8rem 1.5rem;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 500;
-            font-size: 1rem;
-            transition: background-color 0.2s ease;
-        }
+.sigum-home-stat-info p {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--sigum-home-cor-texto-escuro);
+}
 
-        .btn-nova-consulta:hover {
-            background-color: #004494;
-        }
+.sigum-home-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.5rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
 
-        /* Lista de Consultas */
-        .consultas-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 1.5rem;
-        }
+.sigum-home-search-bar {
+  flex-grow: 1;
+  position: relative;
+}
 
-        .consulta-card {
-            background-color: #fff;
-            border-radius: 12px;
-            box-shadow: var(--sombra-card);
-            padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
+.sigum-home-search-bar input {
+  width: 100%;
+  padding: 1rem 1.2rem 1rem 3rem;
+  border-radius: 12px;
+  border: 1px solid var(--sigum-home-cor-borda);
+  font-size: 1rem;
+  background-color: var(--sigum-home-cor-branco);
+  transition: all 0.3s ease;
+}
 
-        .consulta-card:hover {
-             transform: translateY(-5px);
-             box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-        }
-        
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-        }
-        
-        .card-header .protocolo {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--cor-primaria);
-        }
+.sigum-home-search-bar input:focus {
+  outline: none;
+  border-color: var(--sigum-home-cor-primaria);
+  box-shadow: 0 0 0 4px rgba(0, 86, 179, 0.1);
+}
 
-        .status-tag {
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: #fff;
-        }
+.sigum-home-search-bar i {
+  position: absolute;
+  left: 1.2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--sigum-home-cor-texto-claro);
+}
 
-        .status-tag.deferido { background-color: var(--cor-sucesso); }
-        .status-tag.indeferido { background-color: var(--cor-erro); }
-        .status-tag.analise { background-color: var(--cor-aviso); color: var(--cor-titulo); }
+.sigum-home-admin-actions {
+  display: flex;
+  gap: 1rem;
+}
 
-        .card-body h4 {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--cor-titulo);
-            margin-bottom: 0.5rem;
-        }
-        
-        .info-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.95rem;
-            color: var(--cor-texto);
-        }
-        
-        .info-item i {
-            color: #888;
-        }
-        
-        .card-footer {
-            margin-top: auto; /* Empurra o rodapé para o final do card */
-            padding-top: 1rem;
-            border-top: 1px solid var(--cor-borda);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .card-footer .data {
-            font-size: 0.85rem;
-            color: #6c757d;
-        }
+.sigum-home-action-button {
+  background-color: var(--sigum-home-cor-primaria);
+  color: var(--sigum-home-cor-branco);
+  padding: 0.9rem 1.5rem;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+}
 
-        .btn-detalhes {
-            background: none;
-            border: 1px solid var(--cor-primaria);
-            color: var(--cor-primaria);
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-        
-        .btn-detalhes:hover {
-            background-color: var(--cor-primaria);
-            color: #fff;
-        }
+.sigum-home-action-button:hover {
+  background-color: var(--sigum-home-cor-primaria-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 86, 179, 0.2);
+}
 
-        /* Ícones do Font Awesome */
-        @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css');
-    
-        /* Responsividade */
-        @media (max-width: 768px) {
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 1rem;
-            }
-            .toolbar {
-                flex-direction: column;
-                align-items: stretch;
-            }
-        }
+.sigum-home-consultas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 1.8rem;
+}
+
+.sigum-home-consulta-card {
+  background-color: var(--sigum-home-cor-branco);
+  border-radius: 16px;
+  box-shadow: var(--sigum-home-sombra-card);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+}
+
+.sigum-home-consulta-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0, 40, 100, 0.1);
+}
+
+.sigum-home-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 1.5rem 1rem;
+}
+
+.sigum-home-protocolo {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--sigum-home-cor-primaria);
+}
+
+.sigum-home-status-tag {
+  padding: 0.3rem 0.9rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--sigum-home-cor-branco);
+  text-transform: uppercase;
+}
+
+.sigum-home-status-tag.deferido { background-color: var(--sigum-home-cor-sucesso); }
+.sigum-home-status-tag.indeferido { background-color: var(--sigum-home-cor-erro); }
+
+.sigum-home-card-body {
+  padding: 0 1.5rem 1.5rem;
+  flex-grow: 1;
+}
+
+.sigum-home-card-body h4 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--sigum-home-cor-texto-escuro);
+  margin-bottom: 1rem;
+}
+
+.sigum-home-info-item {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 0.95rem;
+  color: var(--sigum-home-cor-texto-claro);
+  margin-bottom: 0.5rem;
+}
+
+.sigum-home-info-item i {
+  color: var(--sigum-home-cor-primaria);
+  width: 16px;
+  text-align: center;
+}
+
+.sigum-home-card-footer {
+  margin-top: auto;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--sigum-home-cor-borda);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sigum-home-data {
+  font-size: 0.9rem;
+  color: var(--sigum-home-cor-texto-claro);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sigum-home-btn-detalhes {
+  background: none;
+  border: none;
+  color: var(--sigum-home-cor-primaria);
+  padding: 0.5rem 0;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sigum-home-btn-detalhes:hover {
+  color: var(--sigum-home-cor-primaria-hover);
+}
+
+.sigum-home-btn-detalhes i {
+  transition: transform 0.3s ease;
+}
+
+.sigum-home-btn-detalhes:hover i {
+  transform: translateX(3px);
+}
+
+.sigum-home-loading-message,
+.sigum-home-error-message,
+.sigum-home-no-results {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 4rem;
+  font-size: 1.2rem;
+  color: var(--sigum-home-cor-texto-claro);
+}
+
+.sigum-home-error-message {
+    color: var(--sigum-home-cor-erro);
+}

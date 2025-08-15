@@ -18,9 +18,16 @@ export default function GerenciamentoZoneamento() {
   const [zonas, setZonas] = useState<Zona[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+  const [userRole, setUserRole] = useState<string | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    const user = localStorage.getItem('user');
+    if (user) {
+      setUserRole(JSON.parse(user).role);
+    }
+  }, []);
 
   const loadZonas = () => {
     setLoading(true);
@@ -30,76 +37,90 @@ export default function GerenciamentoZoneamento() {
       .finally(() => setLoading(false));
   };
 
-  // Recarrega toda vez que entrar na rota /zoneamento
   useEffect(() => {
     if (location.pathname === '/zoneamento') {
       loadZonas();
     }
   }, [location.pathname]);
 
-  if (loading) return <div className="container">Carregando zonas...</div>;
-  if (error) return <div className="container">Erro: {error}</div>;
-
   const getTipoClass = (zona: Zona): string => {
-    if (zona.nome.toLowerCase().includes('comercial')) return 'comercial';
-    if (zona.nome.toLowerCase().includes('residencial')) return 'residencial';
-    if (zona.nome.toLowerCase().includes('industrial')) return 'industrial';
-    if (zona.nome.toLowerCase().includes('mista')) return 'mista';
-    return 'comercial';
+    const nome = zona.nome.toLowerCase();
+    if (nome.includes('comercial')) return 'comercial';
+    if (nome.includes('residencial')) return 'residencial';
+    if (nome.includes('industrial')) return 'industrial';
+    if (nome.includes('mista')) return 'mista';
+    return 'default';
   };
 
+  if (loading) return <div className="sigum-zoneamento-container"><p className="sigum-zoneamento-loading-message">Carregando zonas...</p></div>;
+  if (error) return <div className="sigum-zoneamento-container"><p className="sigum-zoneamento-error-message">Erro: {error}</p></div>;
+
   return (
-    <div className="container">
-      <header className="top-header">
+    <div className="sigum-zoneamento-container">
+      <header className="sigum-zoneamento-top-header">
         <h1>
-          <i className="fas fa-city" style={{ color: 'var(--cor-primaria)' }}></i>{' '}
+          <i className="fas fa-city"></i>
           Gerenciamento de Zoneamento
         </h1>
+        <p>Crie, edite e visualize as zonas urbanas do município.</p>
       </header>
 
-      <nav className="nav-actions">
-        <a href="#" className="btn-voltar" onClick={() => navigate('/')}>
+      <nav className="sigum-zoneamento-nav-actions">
+        <button className="sigum-zoneamento-btn-voltar" onClick={() => navigate('/home')}>
           <i className="fas fa-arrow-left"></i> Voltar ao Painel
-        </a>
-        <button
-          className="btn-nova-zona"
-          onClick={() => navigate('/zoneamento/nova')}
-        >
-          <i className="fas fa-plus"></i> Cadastrar Nova Zona
         </button>
+        {userRole === 'ADMIN' && (
+          <button
+            className="sigum-zoneamento-btn-nova-zona"
+            onClick={() => navigate('/zoneamento/nova')}
+          >
+            <i className="fas fa-plus"></i> Cadastrar Nova Zona
+          </button>
+        )}
       </nav>
 
-      <main className="zonas-grid">
+      <main className="sigum-zoneamento-grid">
         {zonas.map((zona) => (
-          <div key={zona.id} className={`zona-card ${getTipoClass(zona)}`}>
-            <div className="card-header">
-              <h3>{zona.nome}</h3>
-              <button className="btn-editar"
-               onClick={() => navigate(`/zoneamento/editar/${zona.id}`)}>
-                <i className="fas fa-pencil-alt"></i> Editar
-              </button>
-               <button className="btn-editar"
-               onClick={() => navigate(`/zoneamento/${zona.id}/enderecos`)}>
-                <i className="fas fa-pencil-alt"></i> Endereços
-              </button>
-                  <button 
-                  className="btn-editar"
+          <div key={zona.id} className={`sigum-zoneamento-card ${getTipoClass(zona)}`}>
+            <div className="sigum-zoneamento-card-header">
+              <div className="sigum-zoneamento-card-title">
+                <div className={`sigum-zoneamento-type-icon ${getTipoClass(zona)}`}>
+                  <i className="fas fa-map-marked-alt"></i>
+                </div>
+                <h3>{zona.nome}</h3>
+              </div>
+              <div className="sigum-zoneamento-card-actions">
+                <button 
+                  className="sigum-zoneamento-btn-action"
                   onClick={() => navigate(`/zoneamento/detalhes/${zona.id}`)}
                   title="Visualizar no Mapa"
                 >
-                  <i className="fas fa-map-marked-alt"></i> Ver Mapa
+                  <i className="fas fa-map-marked-alt"></i>
                 </button>
+                {userRole === 'ADMIN' && (
+                  <button 
+                    className="sigum-zoneamento-btn-action"
+                    onClick={() => navigate(`/zoneamento/editar/${zona.id}`)}
+                    title="Editar Zona"
+                  >
+                    <i className="fas fa-pencil-alt"></i>
+                  </button>
+                )}
+              </div>
             </div>
-            <div className="card-body">
-              <p>{zona.descricao}</p>
-              <div className="atividades-section">
-                <h4>Atividades Permitidas:</h4>
-                <div className="tags-container">
-                  {zona.cnaesPermitidos.map((cnae) => (
-                    <span key={cnae.id} className="tag" title={cnae.descricao}>
+            <div className="sigum-zoneamento-card-body">
+              <p className="sigum-zoneamento-card-description">{zona.descricao}</p>
+              <div className="sigum-zoneamento-atividades-section">
+                <h4>Atividades Permitidas (CNAEs)</h4>
+                <div className="sigum-zoneamento-tags-container">
+                  {zona.cnaesPermitidos.slice(0, 5).map((cnae) => (
+                    <span key={cnae.id} className="sigum-zoneamento-tag" title={cnae.descricao}>
                       {cnae.codigo}
                     </span>
                   ))}
+                  {zona.cnaesPermitidos.length > 5 && (
+                     <span className="sigum-zoneamento-tag more">+{zona.cnaesPermitidos.length - 5}</span>
+                  )}
                 </div>
               </div>
             </div>

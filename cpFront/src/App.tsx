@@ -1,3 +1,4 @@
+// src/App.tsx
 import React from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Home from './pages/home/Home';
@@ -17,7 +18,7 @@ type PrivateRouteProps = {
 };
 
 function PrivateRoute({ children }: PrivateRouteProps) {
-  const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+  const isAuthenticated = localStorage.getItem('access_token'); // Alterado para verificar o token
   const location = useLocation();
 
   if (!isAuthenticated) {
@@ -30,9 +31,9 @@ function PrivateRoute({ children }: PrivateRouteProps) {
 function App() {
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
+      <Route path="/" element={<Login />} />
       <Route
-        path="/"
+        path="/home"
         element={
           <PrivateRoute>
             <Home />
