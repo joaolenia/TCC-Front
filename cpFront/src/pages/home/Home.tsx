@@ -126,6 +126,9 @@ export default function Home() {
                         <button className="sigum-home-action-button" onClick={() => navigate('/cnaes')}>
                             <i className="fas fa-briefcase"></i> Gerenciar CNAEs
                         </button>
+                          <button className="sigum-home-action-button" onClick={() => navigate('/usuarios')}>
+                            <i className="fas fa-briefcase"></i> Gerenciar Usuarios
+                        </button>
                     </div>
                 )}
             </div>

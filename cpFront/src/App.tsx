@@ -7,18 +7,21 @@ import GerenciamentoZoneamento from './pages/zoneamento/Zoneamento';
 import NovaZona from './pages/zoneamento/NovaZona';
 import Login from './pages/login/Login';
 import EditarZona from './pages/zoneamento/EditarZona';
-// Imports para as novas páginas de CNAE
 import GerenciarCnaes from './pages/cnaes/GerenciarCnaes';
 import NovoCnae from './pages/cnaes/NovoCnae';
 import EditarCnae from './pages/cnaes/EditarCnae';
 import DetalhesZona from './pages/zoneamento/detalhes/DetalhesZona';
+import GerenciarUsuarios from './pages/users/GerenciarUsuarios';
+import NovoUsuario from './pages/users/NovoUsuario';
+import EditarUsuario from './pages/users/EditarUsuario';
+
 
 type PrivateRouteProps = {
   children: React.ReactNode;
 };
 
 function PrivateRoute({ children }: PrivateRouteProps) {
-  const isAuthenticated = localStorage.getItem('access_token'); // Alterado para verificar o token
+  const isAuthenticated = localStorage.getItem('access_token'); 
   const location = useLocation();
 
   if (!isAuthenticated) {
@@ -31,9 +34,9 @@ function PrivateRoute({ children }: PrivateRouteProps) {
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Login />} />
+      <Route path="/login" element={<Login />} />
       <Route
-        path="/home"
+        path="/"
         element={
           <PrivateRoute>
             <Home />
@@ -64,16 +67,23 @@ function App() {
           </PrivateRoute>
         }
       />
-      <Route 
-        path="/zoneamento/editar/:id" 
+      <Route
+        path="/zoneamento/editar/:id"
         element={
           <PrivateRoute>
             <EditarZona />
           </PrivateRoute>
-        } 
+        }
+      />
+       <Route
+        path="/zoneamento/detalhes/:id"
+        element={
+          <PrivateRoute>
+            <DetalhesZona />
+          </PrivateRoute>
+        }
       />
 
-      {/* Novas Rotas para CNAE */}
       <Route
         path="/cnaes"
         element={
@@ -99,16 +109,31 @@ function App() {
         }
       />
 
-       <Route 
-        path="/zoneamento/detalhes/:id" 
+      <Route
+        path="/usuarios"
         element={
           <PrivateRoute>
-            <DetalhesZona />
+            <GerenciarUsuarios />
           </PrivateRoute>
-        } 
+        }
+      />
+      <Route
+        path="/usuarios/novo"
+        element={
+          <PrivateRoute>
+            <NovoUsuario />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/usuarios/editar/:id"
+        element={
+          <PrivateRoute>
+            <EditarUsuario />
+          </PrivateRoute>
+        }
       />
 
-      {/* Rota curinga */}
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );

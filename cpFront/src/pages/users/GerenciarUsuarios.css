@@ -1,0 +1,181 @@
+/* src/pages/usuarios/GerenciarUsuarios.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css');
+
+:root {
+    --sigum-usuario-cor-primaria: #0056b3;
+    --sigum-usuario-cor-sucesso: #28a745;
+    --sigum-usuario-cor-fundo: #f0f2f5;
+    --sigum-usuario-cor-branco: #ffffff;
+    --sigum-usuario-cor-texto-escuro: #212529;
+    --sigum-usuario-cor-texto-claro: #6c757d;
+    --sigum-usuario-cor-borda: #dee2e6;
+    --sigum-usuario-sombra-card: 0 10px 30px rgba(0, 40, 100, 0.07);
+}
+
+.sigum-usuario-container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 2.5rem;
+    background-color: var(--sigum-usuario-cor-fundo);
+}
+
+.sigum-usuario-top-header {
+    margin-bottom: 1.5rem;
+}
+
+.sigum-usuario-top-header h1 {
+    font-size: 2.2rem;
+    color: var(--sigum-usuario-cor-texto-escuro);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.sigum-usuario-top-header i {
+    color: var(--sigum-usuario-cor-primaria);
+}
+
+.sigum-usuario-top-header p {
+    color: var(--sigum-usuario-cor-texto-claro);
+    font-size: 1rem;
+    margin-top: 0.2rem;
+}
+
+.sigum-usuario-nav-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--sigum-usuario-cor-borda);
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.sigum-usuario-btn-voltar {
+    background: var(--sigum-usuario-cor-branco);
+    border: 1px solid var(--sigum-usuario-cor-borda);
+    color: var(--sigum-usuario-cor-texto-escuro);
+    padding: 0.7rem 1.4rem;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    transition: all 0.3s ease;
+}
+
+.sigum-usuario-btn-voltar:hover {
+    background-color: #f8f9fa;
+    border-color: #c1c9d3;
+}
+
+.sigum-usuario-btn-novo {
+    background-color: var(--sigum-usuario-cor-sucesso);
+    color: #fff;
+    padding: 0.8rem 1.6rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.sigum-usuario-btn-novo:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);
+}
+
+.sigum-usuario-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1.8rem;
+}
+
+.sigum-usuario-card {
+    background-color: var(--sigum-usuario-cor-branco);
+    border-radius: 16px;
+    box-shadow: var(--sigum-usuario-sombra-card);
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+}
+
+.sigum-usuario-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 40, 100, 0.12);
+}
+
+.sigum-usuario-card-header {
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--sigum-usuario-cor-borda);
+}
+
+.sigum-usuario-card-title {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-size: 1.1rem; /* Ajustado para emails mais longos */
+    font-weight: 600;
+    color: var(--sigum-usuario-cor-texto-escuro);
+    word-break: break-all;
+}
+
+.sigum-usuario-card-title i {
+    color: var(--sigum-usuario-cor-primaria);
+}
+
+.sigum-usuario-btn-editar {
+    background: none;
+    border: none;
+    color: var(--sigum-usuario-cor-texto-claro);
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.sigum-usuario-btn-editar:hover {
+    background-color: #e9ecef;
+    color: var(--sigum-usuario-cor-primaria);
+}
+
+.sigum-usuario-card-body {
+    padding: 1.5rem;
+    font-size: 0.95rem;
+    color: var(--sigum-usuario-cor-texto-escuro);
+    line-height: 1.6;
+}
+
+.sigum-usuario-role-tag {
+    padding: 0.2rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--sigum-usuario-cor-branco);
+}
+
+.sigum-usuario-role-tag.admin {
+    background-color: var(--sigum-usuario-cor-primaria);
+}
+
+.sigum-usuario-role-tag.user {
+    background-color: var(--sigum-usuario-cor-texto-claro);
+}

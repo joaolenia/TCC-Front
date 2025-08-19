@@ -1,0 +1,198 @@
+/* src/pages/usuarios/Usuario.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css');
+
+:root {
+    --sigum-usuario-form-cor-primaria: #0056b3;
+    --sigum-usuario-form-cor-sucesso: #28a745;
+    --sigum-usuario-form-cor-erro: #dc3545;
+    --sigum-usuario-form-cor-fundo: #f0f2f5;
+    --sigum-usuario-form-cor-branco: #ffffff;
+    --sigum-usuario-form-cor-texto-escuro: #212529;
+    --sigum-usuario-form-cor-texto-claro: #6c757d;
+    --sigum-usuario-form-cor-borda: #dee2e6;
+    --sigum-usuario-form-sombra-card: 0 10px 30px rgba(0, 40, 100, 0.07);
+}
+
+.sigum-usuario-form-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2.5rem;
+    background-color: var(--sigum-usuario-form-cor-fundo);
+}
+
+.sigum-usuario-form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2.5rem;
+}
+
+.sigum-usuario-form-header h1 {
+    font-size: 2.2rem;
+    color: var(--sigum-usuario-form-cor-texto-escuro);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.sigum-usuario-form-header i {
+    color: var(--sigum-usuario-form-cor-primaria);
+}
+
+.sigum-usuario-form-btn-voltar {
+    background: var(--sigum-usuario-form-cor-branco);
+    border: 1px solid var(--sigum-usuario-form-cor-borda);
+    color: var(--sigum-usuario-form-cor-texto-escuro);
+    padding: 0.7rem 1.4rem;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    transition: all 0.3s ease;
+}
+
+.sigum-usuario-form-btn-voltar:hover {
+    background-color: #f8f9fa;
+    border-color: #c1c9d3;
+}
+
+.sigum-usuario-form-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.sigum-usuario-form-card {
+    background-color: var(--sigum-usuario-form-cor-branco);
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: var(--sigum-usuario-form-sombra-card);
+    border: 1px solid #e9ecef;
+}
+
+.sigum-usuario-form-card h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--sigum-usuario-form-cor-texto-escuro);
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--sigum-usuario-form-cor-borda);
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.sigum-usuario-form-input-group {
+    margin-bottom: 1.8rem;
+}
+
+.sigum-usuario-form-input-group:last-child {
+    margin-bottom: 0;
+}
+
+.sigum-usuario-form-input-group label {
+    display: block;
+    margin-bottom: 0.6rem;
+    font-weight: 500;
+    color: var(--sigum-usuario-form-cor-texto-escuro);
+    font-size: 0.95rem;
+}
+
+.sigum-usuario-form-input-group input,
+.sigum-usuario-form-input-group select,
+.sigum-usuario-form-input-group textarea {
+    width: 100%;
+    padding: 0.9rem 1.2rem;
+    border: 1px solid var(--sigum-usuario-form-cor-borda);
+    border-radius: 10px;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.3s ease;
+}
+
+.sigum-usuario-form-input-group input:focus,
+.sigum-usuario-form-input-group select:focus,
+.sigum-usuario-form-input-group textarea:focus {
+    outline: none;
+    border-color: var(--sigum-usuario-form-cor-primaria);
+    box-shadow: 0 0 0 4px rgba(0, 86, 179, 0.1);
+}
+
+.sigum-usuario-form-actions, .sigum-usuario-form-actions-edit {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.sigum-usuario-form-actions-edit {
+    justify-content: space-between;
+}
+
+.sigum-usuario-form-btn-salvar, .sigum-usuario-form-btn-cancelar, .sigum-usuario-form-btn-excluir {
+    padding: 0.9rem 2.5rem;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.sigum-usuario-form-btn-salvar {
+    background-color: var(--sigum-usuario-form-cor-sucesso);
+    color: var(--sigum-usuario-form-cor-branco);
+}
+
+.sigum-usuario-form-btn-salvar:hover:not(:disabled) {
+    background-color: #218838;
+    transform: translateY(-2px);
+}
+
+.sigum-usuario-form-btn-cancelar {
+    background-color: var(--sigum-usuario-form-cor-branco);
+    border: 1px solid var(--sigum-usuario-form-cor-borda);
+    color: var(--sigum-usuario-form-cor-texto-claro);
+}
+
+.sigum-usuario-form-btn-cancelar:hover {
+    background-color: #f8f9fa;
+    border-color: #c1c9d3;
+}
+
+.sigum-usuario-form-btn-excluir {
+    background-color: var(--sigum-usuario-form-cor-erro);
+    color: var(--sigum-usuario-form-cor-branco);
+}
+
+.sigum-usuario-form-btn-excluir:hover:not(:disabled) {
+    background-color: #c82333;
+    transform: translateY(-2px);
+}
+
+.sigum-usuario-form-spinner {
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    display: inline-block;
+    animation: sigum-usuario-form-spin 1s linear infinite;
+}
+
+@keyframes sigum-usuario-form-spin { to { transform: rotate(360deg); } }
+
+.sigum-usuario-form-error-message {
+  color: var(--sigum-usuario-form-cor-erro);
+  background-color: rgba(220, 53, 69, 0.1);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1rem;
+  text-align: center;
+  font-weight: 500;
+}
