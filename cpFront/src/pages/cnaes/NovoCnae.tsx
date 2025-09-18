@@ -1,4 +1,3 @@
-// src/pages/cnaes/NovoCnae.tsx
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createCnae } from '../../services/cnaes';
@@ -68,7 +67,7 @@ export default function NovoCnae() {
               />
             </div>
           </div>
-          
+
           {error && <p className="sigum-cnae-form-error-message">{error}</p>}
 
           <div className="sigum-cnae-form-actions">

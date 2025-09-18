@@ -1,7 +1,7 @@
-// src/pages/cnaes/EditarCnae.tsx
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { fetchCnaeById, updateCnae, deleteCnae } from '../../services/cnaes';
+import ConfirmationModal from '../../components/ConfirmationModal';
 import './Cnae.css';
 
 export default function EditarCnae() {
@@ -13,6 +13,8 @@ export default function EditarCnae() {
   const [error, setError] = useState<string | null>(null);
   const [formLoading, setFormLoading] = useState(false);
   const [pageLoading, setPageLoading] = useState(true);
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   useEffect(() => {
     const cnaeId = Number(id);
@@ -49,21 +51,29 @@ export default function EditarCnae() {
     }
   };
 
-  const handleDelete = async () => {
-    if (window.confirm(`Tem certeza que deseja excluir o CNAE "${codigo}"? Esta ação não pode ser desfeita.`)) {
-      setFormLoading(true);
-      setError(null);
-      try {
-        await deleteCnae(Number(id));
-        navigate('/cnaes');
-      } catch {
-        setError('Erro ao excluir o CNAE.');
-      } finally {
-        setFormLoading(false);
-      }
+
+  const handleDeleteClick = () => {
+    setError(null);
+    setShowDeleteModal(true);
+  };
+
+
+  const confirmDelete = async () => {
+    setFormLoading(true);
+    setError(null);
+    setShowDeleteModal(false); 
+
+    try {
+      await deleteCnae(Number(id));
+      navigate('/cnaes');
+    } catch (err: any) {
+      setError(err.message || 'Erro ao excluir o CNAE.');
+    } finally {
+      setFormLoading(false);
     }
   };
-  
+
+
   if (pageLoading) return <div className="sigum-cnae-form-container"><p>Carregando dados do CNAE...</p></div>;
 
   return (
@@ -87,11 +97,11 @@ export default function EditarCnae() {
               <textarea id="descricao" value={descricao} onChange={(e) => setDescricao(e.target.value)} rows={4} required />
             </div>
           </div>
-          
+
           {error && <p className="sigum-cnae-form-error-message">{error}</p>}
 
           <div className="sigum-cnae-form-actions-edit">
-            <button type="button" onClick={handleDelete} className="sigum-cnae-form-btn-excluir" disabled={formLoading}>
+            <button type="button" onClick={handleDeleteClick} className="sigum-cnae-form-btn-excluir" disabled={formLoading}> {/* 💡 Chama handleDeleteClick */}
               <i className="fas fa-trash-alt"></i> Excluir CNAE
             </button>
             <div className="sigum-cnae-form-actions-right">
@@ -103,6 +113,17 @@ export default function EditarCnae() {
           </div>
         </form>
       </main>
+
+      <ConfirmationModal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={confirmDelete}
+        title="Confirmação de Exclusão"
+        message={`Você tem certeza que deseja excluir o CNAE "${codigo}"? Esta ação é irreversível e pode afetar empresas vinculadas.`}
+        confirmText="Excluir Permanentemente"
+        isDanger={true}
+        isLoading={formLoading}
+      />
     </div>
   );
 }

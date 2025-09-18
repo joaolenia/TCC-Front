@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo, type ChangeEvent } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { fetchZoneamentoById, updateZoneamento, deleteZoneamento } from '../../services/zoneamento';
 import { fetchCnaes } from '../../services/cnaes';
+import ConfirmationModal from '../../components/ConfirmationModal'; 
 import './NovaZona.css';
 import JSZip from 'jszip';
 import { kml } from '@tmcw/togeojson';
@@ -12,7 +13,6 @@ type Cnae = {
   descricao: string;
 };
 
-// Tipagem para GeoJSON
 type GeoJsonGeometry = {
   type: string;
   coordinates: any[];
@@ -42,6 +42,8 @@ export default function EditarZona() {
   const [loading, setLoading] = useState(true);
   const [formLoading, setFormLoading] = useState(false);
 
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
   const [geoJsonArea, setGeoJsonArea] = useState<GeoJsonFeatureCollection | GeoJsonGeometry | null>(null);
   const [geoJsonOriginal, setGeoJsonOriginal] = useState<GeoJsonFeatureCollection | GeoJsonGeometry | null>(null);
   const [fileName, setFileName] = useState<string>('');
@@ -67,7 +69,7 @@ export default function EditarZona() {
           setFileName('Área existente. Envie um novo arquivo para substituir.');
         }
       })
-      .catch(() => setError('Falha ao carregar os dados da zona ou a lista de CNAEs.'))
+      .catch((err: any) => setError(err.message || 'Falha ao carregar os dados da zona ou a lista de CNAEs.'))
       .finally(() => setLoading(false));
   }, [id]);
 
@@ -99,7 +101,7 @@ export default function EditarZona() {
       const kmlDom = new DOMParser().parseFromString(kmlText, 'text/xml');
       const geoJson = kml(kmlDom);
 
-      if (!geoJson.features || geoJson.features.length === 0) 
+      if (!geoJson.features || geoJson.features.length === 0)
         throw new Error('O arquivo KML não contém dados geográficos válidos.');
 
       setGeoJsonArea(geoJson as GeoJsonFeatureCollection);
@@ -117,7 +119,6 @@ export default function EditarZona() {
 
     if (geoJsonArea || geoJsonOriginal) {
       const geo = geoJsonArea || geoJsonOriginal;
-      // Se for geometria simples, transforma em FeatureCollection
       if ((geo as GeoJsonFeatureCollection).type === 'FeatureCollection') {
         areaParaSalvar = geo as GeoJsonFeatureCollection;
       } else {
@@ -154,18 +155,23 @@ export default function EditarZona() {
     }
   };
 
-  const handleDelete = async () => {
-    if (window.confirm(`Tem certeza que deseja excluir a zona "${nome}"? Esta ação não pode ser desfeita.`)) {
-      setFormLoading(true);
-      setError(null);
-      try {
-        await deleteZoneamento(Number(id));
-        navigate('/zoneamento');
-      } catch {
-        setError('Erro ao excluir a zona.');
-      } finally {
-        setFormLoading(false);
-      }
+  const handleDeleteClick = () => {
+    setError(null);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = async () => {
+    setFormLoading(true);
+    setError(null);
+    setShowDeleteModal(false); 
+
+    try {
+      await deleteZoneamento(Number(id));
+      navigate('/zoneamento');
+    } catch (err: any) {
+      setError(err.message || 'Erro ao excluir a zona.');
+    } finally {
+      setFormLoading(false);
     }
   };
 
@@ -225,7 +231,7 @@ export default function EditarZona() {
           {error && <p className="sigum-zona-form-error-message">{error}</p>}
 
           <div className="sigum-zona-form-actions-edit">
-            <button type="button" onClick={handleDelete} className="sigum-zona-form-btn-excluir" disabled={formLoading}>
+            <button type="button" onClick={handleDeleteClick} className="sigum-zona-form-btn-excluir" disabled={formLoading}>
               <i className="fas fa-trash-alt"></i> Excluir Zona
             </button>
             <div className="sigum-zona-form-actions-right">
@@ -237,6 +243,17 @@ export default function EditarZona() {
           </div>
         </form>
       </main>
+
+      <ConfirmationModal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={confirmDelete}
+        title="Confirmação de Exclusão"
+        message={`Você tem certeza que deseja excluir a zona "${nome}" (ID: ${id})? Esta ação é irreversível e pode afetar a validação de empresas.`}
+        confirmText="Excluir Permanentemente"
+        isDanger={true}
+        isLoading={formLoading}
+      />
     </div>
   );
 }

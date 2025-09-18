@@ -28,7 +28,7 @@ export default function NovaZona() {
   useEffect(() => {
     fetchCnaes()
       .then(data => setCnaesDisponiveis(data))
-      .catch(() => setError('Falha ao carregar a lista de CNAEs.'));
+      .catch((err: any) => setError(err.message || 'Falha ao carregar a lista de CNAEs.'));
   }, []);
 
   const handleCnaeChange = (cnaeId: number) => {
@@ -71,7 +71,7 @@ export default function NovaZona() {
       const kmlText = await kmlFile.async('text');
       const parser = new DOMParser();
       const kmlDom = parser.parseFromString(kmlText, 'text/xml');
-      
+
       const geoJson = kml(kmlDom);
 
       if (!geoJson.features || geoJson.features.length === 0) {
@@ -89,10 +89,19 @@ export default function NovaZona() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!nome || cnaesSelecionados.length === 0 || !geoJsonArea) {
-      setError('O nome da zona, um CNAE e um arquivo KMZ são obrigatórios.');
+    if (!nome) {
+      setError('O nome da zona é obrigatório.');
       return;
     }
+    if (cnaesSelecionados.length === 0) {
+      setError('É necessário selecionar ao menos um CNAE.');
+      return;
+    }
+    if (!geoJsonArea) {
+      setError('É obrigatório enviar um arquivo KMZ válido.');
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
@@ -105,7 +114,7 @@ export default function NovaZona() {
       });
       navigate('/zoneamento');
     } catch (err: any) {
-      setError(err.message || 'Erro ao salvar a nova zona.');
+      setError(err.message || 'Erro ao salvar a nova zona. Verifique a conexão.');
     } finally {
       setLoading(false);
     }
@@ -119,7 +128,7 @@ export default function NovaZona() {
           <i className="fas fa-arrow-left"></i> Voltar à Lista
         </button>
       </header>
-      
+
       <main className="sigum-zona-form-main">
         <form onSubmit={handleSubmit} className="sigum-zona-form-body">
           <div className="sigum-zona-form-card">
@@ -163,7 +172,7 @@ export default function NovaZona() {
               ))}
             </div>
           </div>
-          
+
           {error && <p className="sigum-zona-form-error-message">{error}</p>}
 
           <div className="sigum-zona-form-actions">

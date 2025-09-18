@@ -127,7 +127,7 @@
     display: flex;
     align-items: center;
     gap: 0.8rem;
-    font-size: 1.1rem; /* Ajustado para emails mais longos */
+    font-size: 1.1rem; 
     font-weight: 600;
     color: var(--sigum-usuario-cor-texto-escuro);
     word-break: break-all;
@@ -176,6 +176,6 @@
     background-color: var(--sigum-usuario-cor-primaria);
 }
 
-.sigum-usuario-role-tag.user {
+.sigum-usuario-role-tag.padrao {
     background-color: var(--sigum-usuario-cor-texto-claro);
 }
