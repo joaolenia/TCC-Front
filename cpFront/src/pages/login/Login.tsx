@@ -4,8 +4,8 @@ import { login } from '../../services/auth';
 import './Login.css';
 
 export default function Login() {
-  const [email, setEmail] = useState('admin@gmail.com');
-  const [password, setPassword] = useState('admin');
+  const [email, setEmail] = useState('@gmail.com');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
