@@ -16,33 +16,6 @@ type Zona = {
     cnaesPermitidos: { id: number; codigo: string; descricao: string }[];
 };
 
-// ... (funções auxiliares como calcularCentroide e FitBounds permanecem as mesmas)
-
-const calcularCentroide = (geoJson: any): [number, number] => {
-    if (
-        !geoJson || !geoJson.features || !Array.isArray(geoJson.features) ||
-        geoJson.features.length === 0 || !geoJson.features[0].geometry ||
-        !geoJson.features[0].geometry.coordinates ||
-        !Array.isArray(geoJson.features[0].geometry.coordinates[0]) ||
-        geoJson.features[0].geometry.coordinates[0].length === 0
-    ) {
-        return [-26.08, -51.33];
-    }
-    const coords = geoJson.features[0].geometry.coordinates[0];
-    let latSum = 0;
-    let lonSum = 0;
-    coords.forEach((ponto: [number, number]) => {
-        if (Array.isArray(ponto) && ponto.length >= 2) {
-            lonSum += ponto[0];
-            latSum += ponto[1];
-        }
-    });
-    const count = coords.length;
-    if (count === 0) {
-        return [-26.08, -51.33];
-    }
-    return [latSum / count, lonSum / count];
-};
 
 function FitBounds({ geoJsonData }: { geoJsonData: any }) {
     const map = useMap();
