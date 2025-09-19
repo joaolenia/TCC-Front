@@ -14,6 +14,8 @@
   --sigum-home-sombra-card: 0 8px 25px rgba(0, 40, 100, 0.05);
 }
 
+/* Base Desktop Styles */
+
 .sigum-home-page-container {
   max-width: 1600px;
   margin: 0 auto;
@@ -21,6 +23,7 @@
   background-color: var(--sigum-home-cor-fundo);
 }
 
+/* Header */
 .sigum-home-header {
   display: flex;
   justify-content: space-between;
@@ -39,6 +42,7 @@
   font-size: 1rem;
 }
 
+/* User Profile */
 .sigum-home-user-profile {
   display: flex;
   align-items: center;
@@ -83,6 +87,7 @@
   border-color: var(--sigum-home-cor-primaria);
 }
 
+/* Stats Panel */
 .sigum-home-stats-panel {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -103,17 +108,35 @@
   transition: all 0.3s ease;
 }
 
-.sigum-home-stat-card:hover, .sigum-home-stat-card.active {
+.sigum-home-stat-card:hover,
+.sigum-home-stat-card.active {
   transform: translateY(-5px);
   box-shadow: 0 12px 30px rgba(0, 40, 100, 0.1);
 }
 
-.sigum-home-stat-card.total { border-color: var(--sigum-home-cor-primaria); }
-.sigum-home-stat-card.total.active { background-color: #e6f0ff; }
-.sigum-home-stat-card.aprovadas { border-color: var(--sigum-home-cor-sucesso); }
-.sigum-home-stat-card.aprovadas.active { background-color: #eaf7ed; }
-.sigum-home-stat-card.rejeitadas { border-color: var(--sigum-home-cor-erro); }
-.sigum-home-stat-card.rejeitadas.active { background-color: #fbeae8; }
+.sigum-home-stat-card.total {
+  border-color: var(--sigum-home-cor-primaria);
+}
+
+.sigum-home-stat-card.total.active {
+  background-color: #e6f0ff;
+}
+
+.sigum-home-stat-card.aprovadas {
+  border-color: var(--sigum-home-cor-sucesso);
+}
+
+.sigum-home-stat-card.aprovadas.active {
+  background-color: #eaf7ed;
+}
+
+.sigum-home-stat-card.rejeitadas {
+  border-color: var(--sigum-home-cor-erro);
+}
+
+.sigum-home-stat-card.rejeitadas.active {
+  background-color: #fbeae8;
+}
 
 .sigum-home-stat-icon {
   font-size: 2.5rem;
@@ -125,9 +148,17 @@
   color: var(--sigum-home-cor-branco);
 }
 
-.sigum-home-stat-card.total .sigum-home-stat-icon { background-color: var(--sigum-home-cor-primaria); }
-.sigum-home-stat-card.aprovadas .sigum-home-stat-icon { background-color: var(--sigum-home-cor-sucesso); }
-.sigum-home-stat-card.rejeitadas .sigum-home-stat-icon { background-color: var(--sigum-home-cor-erro); }
+.sigum-home-stat-card.total .sigum-home-stat-icon {
+  background-color: var(--sigum-home-cor-primaria);
+}
+
+.sigum-home-stat-card.aprovadas .sigum-home-stat-icon {
+  background-color: var(--sigum-home-cor-sucesso);
+}
+
+.sigum-home-stat-card.rejeitadas .sigum-home-stat-icon {
+  background-color: var(--sigum-home-cor-erro);
+}
 
 .sigum-home-stat-info h3 {
   font-size: 1rem;
@@ -142,6 +173,7 @@
   color: var(--sigum-home-cor-texto-escuro);
 }
 
+/* Toolbar */
 .sigum-home-toolbar {
   display: flex;
   justify-content: space-between;
@@ -201,11 +233,13 @@
 }
 
 .sigum-home-action-button:hover {
-  background-color: var(--sigum-home-cor-primaria-hover);
+  background-color: #004494;
+  /* Cor primária hover (não definida no :root) */
   transform: translateY(-2px);
   box-shadow: 0 4px 15px rgba(0, 86, 179, 0.2);
 }
 
+/* Consultas Grid */
 .sigum-home-consultas-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
@@ -248,8 +282,13 @@
   text-transform: uppercase;
 }
 
-.sigum-home-status-tag.deferido { background-color: var(--sigum-home-cor-sucesso); }
-.sigum-home-status-tag.indeferido { background-color: var(--sigum-home-cor-erro); }
+.sigum-home-status-tag.deferido {
+  background-color: var(--sigum-home-cor-sucesso);
+}
+
+.sigum-home-status-tag.indeferido {
+  background-color: var(--sigum-home-cor-erro);
+}
 
 .sigum-home-card-body {
   padding: 0 1.5rem 1.5rem;
@@ -309,7 +348,8 @@
 }
 
 .sigum-home-btn-detalhes:hover {
-  color: var(--sigum-home-cor-primaria-hover);
+  color: #004494;
+  /* Cor primária hover */
 }
 
 .sigum-home-btn-detalhes i {
@@ -331,5 +371,155 @@
 }
 
 .sigum-home-error-message {
-    color: var(--sigum-home-cor-erro);
+  color: var(--sigum-home-cor-erro);
+}
+
+/* ---------------------------------------------------- */
+/* 🚀 RESPONSIVIDADE PARA TELAS MENORES (Móvel/Tablet) */
+/* ---------------------------------------------------- */
+
+@media (max-width: 1200px) {
+
+  /* Ajustes Gerais para Tablets */
+  .sigum-home-page-container {
+    padding: 2rem 1.5rem;
+  }
+
+  .sigum-home-consultas-grid {
+    /* Permite que o grid use 2 colunas em telas um pouco menores que o desktop */
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+
+  /* Ajustes para Tablets e Móveis */
+  .sigum-home-page-container {
+    padding: 1.5rem 1rem;
+  }
+
+  /* Header: Empilhamento e Redução de Fonte */
+  .sigum-home-header {
+    flex-direction: column-reverse;
+    /* Coloca o perfil do usuário em cima */
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+
+  .sigum-home-header-title h1 {
+    font-size: 1.8rem;
+  }
+
+  /* Perfil do Usuário: Centralizado/Alinhado no topo da seção */
+  .sigum-home-user-profile {
+    width: 100%;
+    justify-content: flex-end;
+    /* Move o perfil para a direita */
+  }
+
+  .sigum-home-user-info {
+    text-align: right;
+  }
+
+  /* Painel de Estatísticas: Cartões em uma coluna */
+  .sigum-home-stats-panel {
+    grid-template-columns: 1fr;
+    /* Uma única coluna */
+    gap: 1rem;
+  }
+
+  .sigum-home-stat-card {
+    padding: 1.2rem;
+    /* Alinha texto à direita e ícone à esquerda para uma leitura clara */
+    justify-content: space-between;
+  }
+
+  .sigum-home-stat-icon {
+    font-size: 2rem;
+    padding: 0.8rem;
+    flex-shrink: 0;
+  }
+
+  .sigum-home-stat-info p {
+    font-size: 2rem;
+    /* Mantém o número grande, mas reduz ligeiramente */
+  }
+
+  /* Toolbar: Empilhamento */
+  .sigum-home-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .sigum-home-search-bar {
+    order: 1;
+    /* Garante que a barra de busca venha primeiro */
+  }
+
+  .sigum-home-admin-actions {
+    order: 2;
+    /* Ações de administrador abaixo da busca */
+    flex-direction: column;
+    /* Empilha os botões */
+    gap: 0.8rem;
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  .sigum-home-action-button {
+    width: 100%;
+    /* Botões de ação ocupam toda a largura */
+    justify-content: center;
+    padding: 0.8rem;
+  }
+
+  /* Grid de Consultas: Ajuste para telas estreitas */
+  .sigum-home-consultas-grid {
+    grid-template-columns: 1fr;
+    /* Uma única coluna para máxima legibilidade */
+    gap: 1rem;
+  }
+
+  .sigum-home-consulta-card {
+    /* Remove o hover de transformação para evitar problemas de layout em toques */
+    transform: none !important;
+  }
+
+  /* Card Body: Redução de Fonte */
+  .sigum-home-card-body h4 {
+    font-size: 1.1rem;
+  }
+
+  .sigum-home-info-item {
+    font-size: 0.9rem;
+  }
+
+  /* Footer: Empilhamento Simples */
+  .sigum-home-card-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Ajustes Finos para Smartphones */
+
+  /* Header: Redução de título */
+  .sigum-home-header-title h1 {
+    font-size: 1.5rem;
+  }
+
+  /* Perfil do Usuário: Ocupa toda a largura, centralizando nome e email (opcional) */
+  .sigum-home-user-profile {
+    /* Mantemos o alinhamento à direita (flex-end) ou podemos centralizar: */
+    justify-content: flex-end;
+  }
+
+  /* Detalhes do Card de Consulta */
+  .sigum-home-protocolo,
+  .sigum-home-data {
+    font-size: 0.8rem;
+  }
 }
