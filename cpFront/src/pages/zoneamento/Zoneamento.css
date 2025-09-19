@@ -113,11 +113,25 @@
     box-shadow: 0 15px 35px rgba(0, 40, 100, 0.12);
 }
 
-.sigum-zoneamento-card.comercial { border-color: var(--sigum-zoneamento-cor-primaria); }
-.sigum-zoneamento-card.residencial { border-color: var(--sigum-zoneamento-cor-info); }
-.sigum-zoneamento-card.industrial { border-color: #616e7c; }
-.sigum-zoneamento-card.mista { border-color: var(--sigum-zoneamento-cor-aviso); }
-.sigum-zoneamento-card.default { border-color: var(--sigum-zoneamento-cor-texto-claro); }
+.sigum-zoneamento-card.comercial {
+    border-color: var(--sigum-zoneamento-cor-primaria);
+}
+
+.sigum-zoneamento-card.residencial {
+    border-color: var(--sigum-zoneamento-cor-info);
+}
+
+.sigum-zoneamento-card.industrial {
+    border-color: #616e7c;
+}
+
+.sigum-zoneamento-card.mista {
+    border-color: var(--sigum-zoneamento-cor-aviso);
+}
+
+.sigum-zoneamento-card.default {
+    border-color: var(--sigum-zoneamento-cor-texto-claro);
+}
 
 .sigum-zoneamento-card-header {
     padding: 1.5rem;
@@ -143,11 +157,25 @@
     color: var(--sigum-zoneamento-cor-branco);
 }
 
-.sigum-zoneamento-type-icon.comercial { background-color: var(--sigum-zoneamento-cor-primaria); }
-.sigum-zoneamento-type-icon.residencial { background-color: var(--sigum-zoneamento-cor-info); }
-.sigum-zoneamento-type-icon.industrial { background-color: #616e7c; }
-.sigum-zoneamento-type-icon.mista { background-color: var(--sigum-zoneamento-cor-aviso); }
-.sigum-zoneamento-type-icon.default { background-color: var(--sigum-zoneamento-cor-texto-claro); }
+.sigum-zoneamento-type-icon.comercial {
+    background-color: var(--sigum-zoneamento-cor-primaria);
+}
+
+.sigum-zoneamento-type-icon.residencial {
+    background-color: var(--sigum-zoneamento-cor-info);
+}
+
+.sigum-zoneamento-type-icon.industrial {
+    background-color: #616e7c;
+}
+
+.sigum-zoneamento-type-icon.mista {
+    background-color: var(--sigum-zoneamento-cor-aviso);
+}
+
+.sigum-zoneamento-type-icon.default {
+    background-color: var(--sigum-zoneamento-cor-texto-claro);
+}
 
 .sigum-zoneamento-card-header h3 {
     font-size: 1.4rem;
@@ -161,7 +189,7 @@
 }
 
 .sigum-zoneamento-btn-action {
-    background: var(--sigum-zoneamento-cor-secundaria);
+    background: var(--sigum-zoneamento-cor-branco);
     border: 1px solid var(--sigum-zoneamento-cor-borda);
     color: var(--sigum-zoneamento-cor-texto-claro);
     width: 38px;
@@ -233,4 +261,88 @@
 
 .sigum-zoneamento-error-message {
     color: var(--sigum-zoneamento-cor-erro);
+}
+
+
+@media (max-width: 768px) {
+    .sigum-zoneamento-container {
+        padding: 1.5rem 1rem;
+    }
+
+    .sigum-zoneamento-top-header h1 {
+        font-size: 1.8rem;
+    }
+
+    .sigum-zoneamento-nav-actions {
+        flex-direction: column;
+        align-items: stretch;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+    }
+
+    .sigum-zoneamento-btn-voltar,
+    .sigum-zoneamento-btn-nova-zona {
+        width: 100%;
+        justify-content: center;
+        padding: 0.8rem;
+        margin: 0;
+    }
+
+    .sigum-zoneamento-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .sigum-zoneamento-card {
+        padding-top: 0;
+    }
+
+    .sigum-zoneamento-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1.2rem 1.2rem 0.5rem;
+    }
+
+    .sigum-zoneamento-card-title {
+        gap: 0.8rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .sigum-zoneamento-card-header h3 {
+        font-size: 1.2rem;
+    }
+
+    .sigum-zoneamento-type-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+
+    .sigum-zoneamento-card-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    .sigum-zoneamento-card-body {
+        padding: 0 1.2rem 1.2rem;
+    }
+
+    .sigum-zoneamento-card-description {
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+
+    .sigum-zoneamento-atividades-section h4 {
+        font-size: 0.85rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .sigum-zoneamento-tags-container {
+        gap: 0.4rem;
+    }
+
+    .sigum-zoneamento-tag {
+        padding: 0.3rem 0.7rem;
+        font-size: 0.8rem;
+    }
 }

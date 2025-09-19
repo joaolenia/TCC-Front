@@ -1,30 +1,17 @@
-
+/* Configurações de Grid para Desktop (Base) */
 .details-zona-layout {
   display: grid;
   grid-template-columns: 1fr;
+  /* Já é uma coluna, bom para telas grandes e pequenas */
   gap: 2rem;
 }
 
-
-/* src/pages/zoneamento/detalhes/DetalhesZona.css */
 .map-card {
-  grid-column: 1 / -1; /* Ocupa a largura total na grade */
+  grid-column: 1 / -1;
 }
 
-.map-container {
-  height: 450px;
-  width: 100%;
-  border-radius: 8px;
-  border: 1px solid var(--cor-borda);
-  z-index: 1;
-  margin-top: 1rem;
-}
+/* Estilos Comuns */
 
-.zona-descricao {
-  font-size: 1rem;
-  color: var(--cor-texto);
-  margin-bottom: 2rem;
-}
 .map-card h3 {
   font-size: 1.3rem;
   color: var(--cor-titulo);
@@ -33,21 +20,76 @@
   border-bottom: 1px solid var(--cor-borda);
 }
 
+.zona-descricao {
+  font-size: 1rem;
+  color: var(--cor-texto);
+  margin-bottom: 2rem;
+}
 
+.map-container {
+  height: 450px;
+  /* Altura padrão para desktop */
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid var(--cor-borda);
+  z-index: 1;
+  margin-top: 1rem;
+}
 
 .tags-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    margin-top: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
 }
 
 .tag {
-    background-color: #e9ecef;
-    color: var(--cor-texto);
-    padding: 0.4rem 0.9rem;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    cursor: help;
+  background-color: #e9ecef;
+  color: var(--cor-texto);
+  padding: 0.4rem 0.9rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: help;
+}
+
+/* ---------------------------------------------------- */
+/* 🚀 RESPONSIVIDADE PARA TELAS MENORES (Máximo de 768px) */
+/* ---------------------------------------------------- */
+
+@media (max-width: 768px) {
+
+  /* Ajustes na altura do mapa para caber melhor na tela móvel */
+  .map-container {
+    height: 300px;
+    /* Reduz a altura para 300px no mobile */
+    margin-top: 0.5rem;
+  }
+
+  /* Redução de espaçamento entre itens do layout */
+  .details-zona-layout {
+    gap: 1.5rem;
+  }
+
+  /* Redução de fonte para títulos em cards */
+  .map-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+
+  /* Ajuste na descrição para melhorar o fluxo de leitura */
+  .zona-descricao {
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Redução do tamanho da tag e do espaçamento para aproveitar o espaço */
+  .tags-container {
+    gap: 0.5rem;
+  }
+
+  .tag {
+    padding: 0.3rem 0.7rem;
+    font-size: 0.8rem;
+  }
 }

@@ -1,4 +1,3 @@
-/* src/pages/cnaes/GerenciarCnaes.css */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css');
 
@@ -207,4 +206,74 @@
 
 .sigum-cnae-error-message {
     color: var(--sigum-cnae-cor-erro);
+}
+
+/* ---------------------------------------------------- */
+/* RESPONSIVIDADE PARA TELAS MENORES (Máximo de 768px) */
+/* ---------------------------------------------------- */
+
+@media (max-width: 768px) {
+    .sigum-cnae-container {
+        padding: 1.5rem 1rem;
+    }
+
+    .sigum-cnae-top-header {
+        margin-bottom: 1rem;
+    }
+
+    .sigum-cnae-top-header h1 {
+        font-size: 1.8rem;
+    }
+
+    .sigum-cnae-nav-actions {
+        flex-direction: column;
+        align-items: stretch;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+    }
+
+    .sigum-cnae-btn-voltar,
+    .sigum-cnae-btn-novo {
+        width: 100%;
+        justify-content: center;
+        padding: 0.8rem;
+        margin: 0;
+    }
+
+    .sigum-cnae-toolbar {
+        margin-bottom: 1.5rem;
+    }
+
+    .sigum-cnae-search-bar {
+        max-width: 100%;
+    }
+
+    .sigum-cnae-search-bar input {
+        padding: 0.8rem 1rem 0.8rem 3rem;
+        font-size: 0.95rem;
+    }
+
+    .sigum-cnae-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .sigum-cnae-card-header {
+        padding: 1rem;
+    }
+
+    .sigum-cnae-card-title {
+        font-size: 1.1rem;
+        word-break: break-all;
+    }
+
+    .sigum-cnae-card-body {
+        padding: 1rem;
+        font-size: 0.9rem;
+    }
+
+    .sigum-cnae-btn-editar {
+        width: 32px;
+        height: 32px;
+    }
 }
